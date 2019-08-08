@@ -15,14 +15,12 @@ class App extends Component {
           <MyChart
             location="Horta"
             data={[[1, 4], [2, 5], [3, 5]]}
-            wantedData={["O2P", "O2C"]}
           />
         </li>
         <li>
           <MyChart
             location="S. Miguel"
             data={[[1, 4], [2, 5], [3, 5]]}
-            wantedData={["O2P"]}
           />
         </li>
       </ul>
