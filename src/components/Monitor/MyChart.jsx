@@ -100,8 +100,12 @@ class App extends Component {
       liveUpdate: true,
     })
 
-    if (e) {
-      this.updateLiveData(JSON.parse(e))
+    try {
+      if (e) {
+        this.updateLiveData(JSON.parse(e))
+      }
+    } catch {
+      console.warn(e)
     }
   }
 

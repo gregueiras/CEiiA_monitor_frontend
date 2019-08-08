@@ -84,6 +84,7 @@ class Monitor extends React.Component {
                         title={title}
                         yTitle={yTitle}
                         data={data}
+                        location={location}
                       />
                     </TabPanel>
                   );
