@@ -33,11 +33,12 @@ class App extends Component {
     };
 
     this.location = (props.location ? props.location : "default");
+    this.wantedData = props.wantedData;
   }
 
   componentDidMount() {
     this._isMounted = true;
-    subscribeTo(this.location, (err, value) => this.handleStartLiveUpdate(value));
+    subscribeTo(this.location, this.wantedData, (err, value) => this.handleStartLiveUpdate(value));
   }
 
   componentWillUnmount() {

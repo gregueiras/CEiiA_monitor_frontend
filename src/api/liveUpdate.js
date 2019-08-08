@@ -8,12 +8,12 @@ function getSubscriptionName(name) {
   return `update${md5(name)}`
 }
 
-function subscribeTo(eventName, func) {
+function subscribeTo(eventName, wantedData, func) {
   const subName = getSubscriptionName(eventName)
 
   console.log(subName)
   socket.on(subName, newVal => func(null, newVal))
-  socket.emit(subName)
+  socket.emit(subName, JSON.stringify(wantedData))
 }
 
 function unsubscribeTo(eventName) {
