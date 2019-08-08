@@ -32,7 +32,9 @@ class App extends Component {
       timestamp: "no timestamp yet",
     }
 
-    this.location = props.location ? props.location : "default"
+    this.location = props.location && props.type
+      ? `${props.location}${props.type}`
+      : `default`
   }
 
   componentDidMount() {

@@ -18,6 +18,7 @@ function subscribeTo(eventName, func) {
 
 function unsubscribeTo(eventName) {
   socket.removeListener(eventName)
+  socket.disconnect()
 }
 
 export { subscribeTo, unsubscribeTo }

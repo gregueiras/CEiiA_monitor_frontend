@@ -75,7 +75,7 @@ class Monitor extends React.Component {
             </TabList>
 
             {charts &&
-              charts.map(({ data, yTitle, title }, index) => {
+              charts.map(({ data, yTitle, title, type }, index) => {
                 if (data) {
                   return (
                     <TabPanel key={index}>
@@ -85,6 +85,7 @@ class Monitor extends React.Component {
                         yTitle={yTitle}
                         data={data}
                         location={location}
+                        type={type}
                       />
                     </TabPanel>
                   );
