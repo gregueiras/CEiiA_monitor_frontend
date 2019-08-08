@@ -1,0 +1,13 @@
+ul.monitors {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 0.3em;
+
+  padding-left: 0;
+  margin-top: 0;  
+}
+
+ul.monitors li {
+  max-width: 100%;
+}

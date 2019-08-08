@@ -7,7 +7,9 @@
     "paths": {
       "*": ["*"],
       "components/*": ["src/components/*"],
-      "data/*": ["src/data/*"]
+      "data/*": ["src/data/*"],
+      "style/*": ["src/style/*"],
+      "api/*": ["src/api/*"]
     }
   }
 }
