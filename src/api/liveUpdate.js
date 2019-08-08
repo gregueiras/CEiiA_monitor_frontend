@@ -1,15 +1,23 @@
-import openSocket from "socket.io-client";
-const port = 3333;
-const socket = openSocket(`http://localhost:${port}`);
-const eventName = "timer";
+import openSocket from "socket.io-client"
+import md5 from "md5"
 
-function subscribeToTimer(cb) {
-  socket.on(eventName, timestamp => cb(null, timestamp));
-  socket.emit("subscribeToTimer", 1000);
+const port = 3333
+const socket = openSocket(`http://localhost:${port}`)
+
+function getSubscriptionName(name) {
+  return `update${md5(name)}`
 }
 
-function unsubscribeToTimer() {
-  socket.removeListener(eventName);
+function subscribeTo(eventName, func) {
+  const subName = getSubscriptionName(eventName)
+
+  console.log(subName)
+  socket.on(subName, newVal => func(null, newVal))
+  socket.emit(subName)
 }
 
-export { subscribeToTimer, unsubscribeToTimer };
+function unsubscribeTo(eventName) {
+  socket.removeListener(eventName)
+}
+
+export { subscribeTo, unsubscribeTo }

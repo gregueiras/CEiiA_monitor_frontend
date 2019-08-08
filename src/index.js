@@ -12,7 +12,16 @@ class App extends Component {
     return (
       <ul className="monitors">
         <li>
-          <MyChart location="Test" data={ [[1, 4], [2, 5], [3, 5]]} />
+          <MyChart
+            location="Horta"
+            data={[[1, 4], [2, 5], [3, 5]]}
+          />
+        </li>
+        <li>
+          <MyChart
+            location="S. Miguel"
+            data={[[1, 4], [2, 5], [3, 5]]}
+          />
         </li>
       </ul>
     );

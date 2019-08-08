@@ -10,7 +10,7 @@ import {
   LineSeries,
   Tooltip
 } from "react-jsx-highcharts";
-import { subscribeToTimer, unsubscribeToTimer } from "api/liveUpdate";
+import { subscribeTo, unsubscribeTo } from "api/liveUpdate";
 
 class App extends Component {
   _isMounted = false;
@@ -31,17 +31,19 @@ class App extends Component {
       style: props.style,
       timestamp: "no timestamp yet"
     };
+
+    this.location = (props.location ? props.location : "default");
   }
 
   componentDidMount() {
     this._isMounted = true;
-    subscribeToTimer((err, value) => this.handleStartLiveUpdate(value));
+    subscribeTo(this.location, (err, value) => this.handleStartLiveUpdate(value));
   }
 
   componentWillUnmount() {
     console.log("UNMOUNT");
     this._isMounted = false;
-    unsubscribeToTimer(err => this.handleStopLiveUpdate());
+    unsubscribeTo(this.location, err => this.handleStopLiveUpdate());
   }
 
   updateLiveData(value) {
@@ -105,7 +107,6 @@ class App extends Component {
       yTitle,
       data,
       style,
-      timestamp
     } = this.state;
 
     return (
