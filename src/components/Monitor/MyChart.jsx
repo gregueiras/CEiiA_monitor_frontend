@@ -11,6 +11,8 @@ import {
   Tooltip,
 } from "react-jsx-highcharts"
 import Socket from "api/liveUpdate"
+import "style/charts.css"
+
 
 class App extends Component {
   _isMounted = false
@@ -21,6 +23,10 @@ class App extends Component {
     this.handleStartLiveUpdate = this.handleStartLiveUpdate.bind(this)
     this.handleStopLiveUpdate = this.handleStopLiveUpdate.bind(this)
     this.socket = new Socket()
+
+    this.socket.socket.on("connect_error", e => {
+      this.handleStopLiveUpdate()
+    })
 
     this.state = {
       data: props.data,
@@ -51,15 +57,7 @@ class App extends Component {
   }
 
   updateLiveData(messageReceived) {
-    if (!messageReceived) {
-      console.error(`Corrupted Message: ${messageReceived}`)
-      return
-    }
-
-    const [location, timestamp, value] = JSON.parse(messageReceived)
-    console.log(`Message Received: ${messageReceived}`)
-
-    function addDataPoint(data) {
+    function addDataPoint(data, eraseOldest) {
       try {
         if (data) {
           const [lastTime, lastValue] = data[data.length - 1]
@@ -80,16 +78,34 @@ class App extends Component {
 
           newPoint.push(newTime)
           newPoint.push(newValue)
-          let newData = data.slice(0) // 0 to Add, 1 to Delete Oldest Record
+          let newData = data.slice(eraseOldest ? 1 : 0) // 0 to Add, 1 to Delete Oldest Record
           newData = [...newData, newPoint]
+
+          console.log(data)
           return newData
         }
       } catch {}
     }
 
-    if (this._isMounted && this.location === location) {
+    if (!this.state.liveUpdate) this.setState({ liveUpdate: true })
+
+    if (!messageReceived) {
+      console.error(`Corrupted Message: ${messageReceived}`)
+      return
+    }
+
+    const [buoyID, timestamp, value] = JSON.parse(messageReceived)
+    console.log(`Message Received: ${messageReceived}`)
+
+    if (this._isMounted) {
       const { data } = this.state
-      const newData = addDataPoint(data)
+      const newData = data.map(({ name, data: buoyData }) => {
+        if (name === buoyID) {
+          buoyData = addDataPoint(buoyData, false)
+        }
+
+        return { name, data: buoyData }
+      })
 
       this.setState({
         data: newData,
@@ -133,10 +149,12 @@ class App extends Component {
         <span
           style={{
             ...liveUpdateStyle,
-            backgroundColor: `rgb(${liveUpdate ? "72, 173, 72" : "234, 67, 53"})`,
+            backgroundColor: `rgb(${
+              liveUpdate ? "72, 173, 72" : "234, 67, 53"
+            })`,
           }}
         ></span>
-        <HighchartsChart oneToOne={true}>
+        <HighchartsChart oneToOne={true} styledMode>
           <Chart zoomType="x" type="datetime" />
           <Title>{title}</Title>
 
@@ -148,7 +166,9 @@ class App extends Component {
 
           <YAxis>
             <YAxis.Title>{yTitle}</YAxis.Title>
-            {data.map(({ name, data: dataBuoy }) => <LineSeries data={dataBuoy} key={name} name={name}/>)}
+            {data.map(({ name, data: dataBuoy }) => (
+              <LineSeries data={dataBuoy} key={name} name={name} />
+            ))}
           </YAxis>
         </HighchartsChart>
       </div>

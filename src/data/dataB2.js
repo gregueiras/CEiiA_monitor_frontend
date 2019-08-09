@@ -114,12 +114,12 @@ const MiscSchema = [
   },
 ]
 
-const O2 = {
+const O2_2 = {
   data: O2Data,
   schema: O2Schema,
 }
 
-const Misc = {
+const Misc_2 = {
   data: MiscData,
   schema: MiscSchema,
 }
@@ -127,12 +127,13 @@ const Misc = {
 const dataBuoys = [
   {
     name: "B2582",
-    data: JSON.parse(process.env.REACT_APP_TEST_DATA_0),
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_2),
   },
   {
     name: "B4242",
-    data: JSON.parse(process.env.REACT_APP_TEST_DATA_1),
-  },/*
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_3),
+  },
+  /*
   {
     name: "B8952",
     data: JSON.parse(process.env.REACT_APP_TEST_DATA_2),
@@ -141,10 +142,10 @@ const dataBuoys = [
     name: "B1482",
     data: JSON.parse(process.env.REACT_APP_TEST_DATA_3),
   },
-  */
+*/
 ]
 
-const charts = [
+const charts_2 = [
   {
     name: (
       <>
@@ -178,14 +179,14 @@ const charts = [
   },
 ]
 
-const mapCenter = { lat: 37.739566, lng: -25.343753 }
-const buoys = [
-  { lat: 37.686081, lng: -24.605611, key: "B2582" },
-  { lat: 37.686081, lng: -26.005611, key: "B4242" },
-  { lat: 38.066081, lng: -25.385611, key: "B8952" },
-  { lat: 37.366081, lng: -25.225611, key: "B1482" },
+const mapCenter_2 = { lat: 38.7211917, lng: -27.2805513 }
+const buoys_2 = [
+  { lat: 38.864673, lng: -27.198971, key: "B4712" },
+  { lat: 38.783374, lng: -26.952793, key: "B4242" },
+  { lat: 38.701063, lng: -26.951252, key: "B4520" },
+  { lat: 38.596731, lng: -26.989337, key: "B4209" },
 ]
 
-const name = "S. Miguel"
+const name_2 = "Terceira"
 
-export { O2, Misc, charts, mapCenter, buoys, name}
+export { O2_2, Misc_2, charts_2, mapCenter_2, buoys_2, name_2 }
