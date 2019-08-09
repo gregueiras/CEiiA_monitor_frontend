@@ -10,7 +10,7 @@ import {
   LineSeries,
   Tooltip,
 } from "react-jsx-highcharts"
-import { subscribeTo, unsubscribeTo } from "api/liveUpdate"
+import Socket from "api/liveUpdate"
 
 class App extends Component {
   _isMounted = false
@@ -21,6 +21,7 @@ class App extends Component {
     this.handleStartLiveUpdate = this.handleStartLiveUpdate.bind(this)
     this.handleStopLiveUpdate = this.handleStopLiveUpdate.bind(this)
     this.chart = null
+    this.socket = new Socket()
 
     this.state = {
       data: props.data,
@@ -32,14 +33,15 @@ class App extends Component {
       timestamp: "no timestamp yet",
     }
 
-    this.location = props.location && props.type
-      ? `${props.location}${props.type}`
-      : `default`
+    this.location =
+      props.location && props.type
+        ? `${props.location}${props.type}`
+        : `default`
   }
 
   componentDidMount() {
     this._isMounted = true
-    subscribeTo(this.location, (err, value) =>
+    this.socket.subscribeTo(this.location, (err, value) =>
       this.handleStartLiveUpdate(value)
     )
   }
@@ -47,7 +49,7 @@ class App extends Component {
   componentWillUnmount() {
     console.log("UNMOUNT")
     this._isMounted = false
-    unsubscribeTo(this.location, err => this.handleStopLiveUpdate())
+    this.socket.unsubscribeTo(this.location, err => this.handleStopLiveUpdate())
   }
 
   updateLiveData(messageReceived) {

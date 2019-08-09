@@ -1,24 +1,31 @@
 import openSocket from "socket.io-client"
 import md5 from "md5"
 
-const port = 3333
-const socket = openSocket(`http://localhost:${port}`)
+class Socket {
+  constructor(port = 3333) {
+    this.socket = openSocket(`http://localhost:${port}`, {
+      "force new connection": true,
+    })
 
-function getSubscriptionName(name) {
-  return `update${md5(name)}`
-}
+  }
+  
+  getSubscriptionName(name) {
+    return `update${md5(name)}`
+  }
 
-function subscribeTo(eventName, func) {
-  const subName = getSubscriptionName(eventName)
-
+ subscribeTo(eventName, func) {
+  console.log(eventName)
+  const subName = this.getSubscriptionName(eventName)
+  
   console.log(subName)
-  socket.on(subName, newVal => func(null, newVal))
-  socket.emit(subName)
+  this.socket.on(subName, newVal => func(null, newVal))
+  this.socket.emit(subName, "HEY")
 }
 
-function unsubscribeTo(eventName) {
-  socket.removeListener(eventName)
-  socket.disconnect()
+ unsubscribeTo(eventName) {
+  this.socket.removeListener(eventName)
+  this.socket.disconnect()
 }
 
-export { subscribeTo, unsubscribeTo }
+}
+export default Socket

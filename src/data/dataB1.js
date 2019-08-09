@@ -134,7 +134,7 @@ const charts = [
     data: [[1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 4]],
     yTitle: "%",
     title: "Oxygen Percentage",
-    type: "O2P",
+    type: "O2C",
   },
   {
     name: (
@@ -145,7 +145,7 @@ const charts = [
     data: [[1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 4]],
     yTitle: "mg/L",
     title: "Oxygen (mg/L)",
-    type: "O2C",
+    type: "O2P",
   },
   {
     name: "Salinity",
