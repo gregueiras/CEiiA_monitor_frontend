@@ -148,7 +148,7 @@ class App extends Component {
 
           <YAxis>
             <YAxis.Title>{yTitle}</YAxis.Title>
-            <LineSeries data={data} />
+            {data.map(({ name, data: dataBuoy }) => <LineSeries data={dataBuoy} key={name} name={name}/>)}
           </YAxis>
         </HighchartsChart>
       </div>

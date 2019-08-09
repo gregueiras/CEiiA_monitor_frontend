@@ -1,10 +1,6 @@
 import React, { Component } from "react"
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} from "react-google-maps"
+import { withScriptjs, withGoogleMap, GoogleMap } from "react-google-maps"
+import MyMarker from "./MyMarker"
 
 class MyMap extends Component {
   render() {
@@ -12,7 +8,7 @@ class MyMap extends Component {
       disableDefaultUI: true,
     }
 
-    const { buoys = [], mapCenter = {lat: 0, lng: 0} } = this.props
+    const { buoys = [], mapCenter = { lat: 0, lng: 0 } } = this.props
 
     const MapWithAMarker = withScriptjs(
       withGoogleMap(props => (
@@ -21,9 +17,7 @@ class MyMap extends Component {
           defaultCenter={mapCenter}
           defaultOptions={mapOptions}
         >
-          {buoys.map(pos => 
-            <Marker position={pos} key={pos.key}/>
-          )}
+          {buoys.map(({ lat, lng, key }) => <MyMarker key={key} lat={lat} lng={lng} name={key} />)}
         </GoogleMap>
       ))
     )

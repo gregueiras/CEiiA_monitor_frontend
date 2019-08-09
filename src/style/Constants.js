@@ -5,7 +5,7 @@ const Constants = {
   whiteText: "white",
   fontFamily: "Verdana, sans-serif",
   smallText: "60%",
-  mediumText: "80%",
+  mediumText: "70%",
   cellWidth: "auto",
   textAlign: "center",
 }

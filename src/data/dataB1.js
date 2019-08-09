@@ -124,6 +124,25 @@ const Misc = {
   schema: MiscSchema,
 }
 
+const dataBuoys = [
+  {
+    name: "B2582",
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_0),
+  },
+  {
+    name: "B4242",
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_1),
+  },
+  {
+    name: "B8952",
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_2),
+  },
+  {
+    name: "B1482",
+    data: JSON.parse(process.env.REACT_APP_TEST_DATA_3),
+  },
+]
+
 const charts = [
   {
     name: (
@@ -131,9 +150,7 @@ const charts = [
         O<sub>2</sub> %
       </>
     ),
-    data: process.env.NODE_ENV
-      ? JSON.parse(process.env.REACT_APP_TEST_DATA)
-      : dataO2P,
+    data: process.env.NODE_ENV === "development" ? dataBuoys : dataO2P,
     yTitle: "%",
     title: "Oxygen Percentage",
     type: "O2P",
@@ -144,9 +161,7 @@ const charts = [
         O<sub>2</sub> mg/L
       </>
     ),
-    data: process.env.NODE_ENV
-      ? JSON.parse(process.env.REACT_APP_TEST_DATA)
-      : dataMGL,
+    data: process.env.NODE_ENV === "development" ? dataBuoys : dataMGL,
     yTitle: "mg/L",
     title: "Oxygen (mg/L)",
     type: "O2C",
@@ -164,7 +179,7 @@ const charts = [
 
 const mapCenter = { lat: 37.739566, lng: -25.343753 }
 const buoys = [
-  { lat: 37.686081, lng: -24.605611, key: "B25825" },
+  { lat: 37.686081, lng: -24.605611, key: "B2582" },
   { lat: 37.686081, lng: -26.005611, key: "B4242" },
   { lat: 38.066081, lng: -25.385611, key: "B8952" },
   { lat: 37.366081, lng: -25.225611, key: "B1482" },
