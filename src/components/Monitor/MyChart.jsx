@@ -20,7 +20,6 @@ class App extends Component {
     this.updateLiveData = this.updateLiveData.bind(this)
     this.handleStartLiveUpdate = this.handleStartLiveUpdate.bind(this)
     this.handleStopLiveUpdate = this.handleStopLiveUpdate.bind(this)
-    this.chart = null
     this.socket = new Socket()
 
     this.state = {
@@ -30,7 +29,6 @@ class App extends Component {
       xTitle: props.xTitle,
       yTitle: props.yTitle,
       style: props.style,
-      timestamp: "no timestamp yet",
     }
 
     this.location =
@@ -41,9 +39,7 @@ class App extends Component {
 
   componentDidMount() {
     this._isMounted = true
-    this.socket.subscribeTo(this.location, (err, value) =>
-      this.handleStartLiveUpdate(value)
-    )
+    this.handleStartLiveUpdate()
   }
 
   componentWillUnmount() {
@@ -58,8 +54,8 @@ class App extends Component {
       return
     }
 
-    const [timestamp, value] = messageReceived
-    console.log(timestamp, value)
+    const [location, timestamp, value] = JSON.parse(messageReceived)
+    console.log(`Message Received: ${messageReceived}`)
 
     function addDataPoint(data) {
       try {
@@ -89,7 +85,7 @@ class App extends Component {
       } catch {}
     }
 
-    if (this._isMounted) {
+    if (this._isMounted && this.location === location) {
       const { data } = this.state
       const newData = addDataPoint(data)
 
@@ -100,17 +96,13 @@ class App extends Component {
   }
 
   handleStartLiveUpdate(e) {
+    console.log(e)
+    this.socket.subscribeTo(this.location, (err, value) =>
+      this.updateLiveData(value)
+    )
     this.setState({
       liveUpdate: true,
     })
-
-    try {
-      if (e) {
-        this.updateLiveData(JSON.parse(e))
-      }
-    } catch {
-      console.warn(e)
-    }
   }
 
   handleStopLiveUpdate(e) {
@@ -140,24 +132,6 @@ class App extends Component {
             <LineSeries data={data} />
           </YAxis>
         </HighchartsChart>
-        <div>
-          {!liveUpdate && (
-            <button
-              className="btn btn-success"
-              onClick={this.handleStartLiveUpdate}
-            >
-              Live update
-            </button>
-          )}
-          {liveUpdate && (
-            <button
-              className="btn btn-danger"
-              onClick={this.handleStopLiveUpdate}
-            >
-              Stop update
-            </button>
-          )}
-        </div>
       </div>
     )
   }

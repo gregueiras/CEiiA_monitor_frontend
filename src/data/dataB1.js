@@ -131,10 +131,10 @@ const charts = [
         O<sub>2</sub> %
       </>
     ),
-    data: [[1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 4]],
+    data: process.env.NODE_ENV ? JSON.parse(process.env.REACT_APP_TEST_DATA) : dataO2P,
     yTitle: "%",
     title: "Oxygen Percentage",
-    type: "O2C",
+    type: "O2P",
   },
   {
     name: (
@@ -142,10 +142,10 @@ const charts = [
         O<sub>2</sub> mg/L
       </>
     ),
-    data: [[1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 4]],
+    data: process.env.NODE_ENV ? JSON.parse(process.env.REACT_APP_TEST_DATA) : dataMGL,
     yTitle: "mg/L",
     title: "Oxygen (mg/L)",
-    type: "O2P",
+    type: "O2C",
   },
   {
     name: "Salinity",
@@ -157,5 +157,7 @@ const charts = [
     name: "Temperature",
   },
 ]
+
+console.dir(process.env)
 
 export { O2, Misc, charts }
