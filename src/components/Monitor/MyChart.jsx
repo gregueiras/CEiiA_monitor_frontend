@@ -39,7 +39,9 @@ class App extends Component {
 
   componentDidMount() {
     this._isMounted = true
-    this.handleStartLiveUpdate()
+    if (this.props.liveUpdate) {
+      this.handleStartLiveUpdate()
+    }
   }
 
   componentWillUnmount() {
@@ -96,7 +98,6 @@ class App extends Component {
   }
 
   handleStartLiveUpdate(e) {
-    console.log(e)
     this.socket.subscribeTo(this.location, (err, value) =>
       this.updateLiveData(value)
     )
@@ -115,8 +116,26 @@ class App extends Component {
   render() {
     const { liveUpdate, title, xTitle, yTitle, data, style } = this.state
 
+    const liveUpdateStyle = {
+      height: "18px",
+      width: "18px",
+      position: "absolute",
+      borderRadius: "50%",
+      zIndex: 1,
+      top: 0,
+      right: 0,
+      marginRight: "0.5em",
+      marginTop: "0.5em",
+    }
+
     return (
-      <div className="app" style={style}>
+      <div className="app" style={{ ...style, position: "relative" }}>
+        <span
+          style={{
+            ...liveUpdateStyle,
+            backgroundColor: `rgb(${liveUpdate ? "72, 173, 72" : "234, 67, 53"})`,
+          }}
+        ></span>
         <HighchartsChart oneToOne={true}>
           <Chart zoomType="x" type="datetime" />
           <Title>{title}</Title>

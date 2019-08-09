@@ -1,14 +1,23 @@
-import React from "react";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import Table from "./Monitor/Table";
-import MyChart from "./Monitor/MyChart";
-import MyMap from "./Monitor/MyMap";
-import Constants from "style/Constants";
-import "react-tabs/style/react-tabs.css";
+import React from "react"
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs"
+import Table from "./Monitor/Table"
+import MyChart from "./Monitor/MyChart"
+import MyMap from "./Monitor/MyMap"
+import Constants from "style/Constants"
+import "react-tabs/style/react-tabs.css"
 
 class Monitor extends React.Component {
   render() {
-    const { charts, o2, misc, location = "Your Location", style } = this.props;
+    const {
+      charts,
+      o2,
+      misc,
+      location = "Your Location",
+      style,
+      mapCenter,
+      buoys,
+      liveUpdate,
+    } = this.props
 
     return (
       <div style={{ ...monitorStyle, ...style }}>
@@ -22,7 +31,7 @@ class Monitor extends React.Component {
           style={{
             display: "flex",
             justifyContent: "space-evenly",
-            marginBottom: "1em"
+            marginBottom: "1em",
           }}
         >
           <div style={{ width: "50%" }}>
@@ -30,14 +39,14 @@ class Monitor extends React.Component {
               <TabList>
                 <Tab
                   style={{
-                    fontSize: Constants.mediumText
+                    fontSize: Constants.mediumText,
                   }}
                 >
                   Map
                 </Tab>
                 <Tab
                   style={{
-                    fontSize: Constants.mediumText
+                    fontSize: Constants.mediumText,
                   }}
                 >
                   Feeding
@@ -45,7 +54,11 @@ class Monitor extends React.Component {
               </TabList>
 
               <TabPanel style={{ height: "15em" }}>
-                <MyMap style={{ height: "inherit" }} />
+                <MyMap
+                  style={{ height: "inherit" }}
+                  mapCenter={mapCenter}
+                  buoys={buoys}
+                />
               </TabPanel>
               <TabPanel>
                 <h2>Any content 2</h2>
@@ -86,38 +99,39 @@ class Monitor extends React.Component {
                         data={data}
                         location={location}
                         type={type}
+                        liveUpdate={liveUpdate}
                       />
                     </TabPanel>
-                  );
+                  )
                 } else {
-                  return <TabPanel key={index}></TabPanel>;
+                  return <TabPanel key={index}></TabPanel>
                 }
               })}
           </Tabs>{" "}
         </div>
       </div>
-    );
+    )
   }
 }
 
 const headerStyle = {
-  marginBottom: "0.5em"
-};
+  marginBottom: "0.5em",
+}
 
 const panelHeaderStyle = {
   paddingLeft: "0.5em",
   paddingRight: "0.5em",
   background: Constants.darkBackground,
   display: "flex",
-  justifyContent: "space-between"
-};
+  justifyContent: "space-between",
+}
 
 const monitorStyle = {
   fontFamily: Constants.fontFamily,
   background: Constants.lightBackground,
   color: Constants.whiteText,
   padding: "1em",
-  paddingTop: "1em"
-};
+  paddingTop: "1em",
+}
 
-export default Monitor;
+export default Monitor

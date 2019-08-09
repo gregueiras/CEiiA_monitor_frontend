@@ -1,4 +1,3 @@
-import gAPI from "../../auth/GoogleAPI"
 import React, { Component } from "react"
 import {
   withScriptjs,
@@ -13,20 +12,30 @@ class MyMap extends Component {
       disableDefaultUI: true,
     }
 
+    const { buoys = [], mapCenter = {lat: 0, lng: 0} } = this.props
 
     const MapWithAMarker = withScriptjs(
       withGoogleMap(props => (
-        <GoogleMap defaultZoom={8} defaultCenter={{ lat: 37.739566, lng: -25.343753 }} defaultOptions={mapOptions}>
-          <Marker position={{ lat: 37.486081, lng: -25.205611 }} />
+        <GoogleMap
+          defaultZoom={8}
+          defaultCenter={mapCenter}
+          defaultOptions={mapOptions}
+        >
+          {buoys.map(pos => 
+            <Marker position={pos} key={pos.key}/>
+          )}
         </GoogleMap>
-      )));
-    
-    return (<MapWithAMarker
-      googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${gAPI}&v=3.exp&libraries=geometry,drawing,places`}
-      loadingElement={<div style={{ height: `100%` }} />}
-      containerElement={<div style={{ height: `inherit` }} />}
-      mapElement={<div style={{ height: `100%` }} />}
-    />);
+      ))
+    )
+
+    return (
+      <MapWithAMarker
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_MAPS_API}&v=3.exp&libraries=geometry,drawing,places`}
+        loadingElement={<div style={{ height: `100%` }} />}
+        containerElement={<div style={{ height: `inherit` }} />}
+        mapElement={<div style={{ height: `100%` }} />}
+      />
+    )
   }
 }
 

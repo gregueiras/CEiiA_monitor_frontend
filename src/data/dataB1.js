@@ -131,7 +131,9 @@ const charts = [
         O<sub>2</sub> %
       </>
     ),
-    data: process.env.NODE_ENV ? JSON.parse(process.env.REACT_APP_TEST_DATA) : dataO2P,
+    data: process.env.NODE_ENV
+      ? JSON.parse(process.env.REACT_APP_TEST_DATA)
+      : dataO2P,
     yTitle: "%",
     title: "Oxygen Percentage",
     type: "O2P",
@@ -142,7 +144,9 @@ const charts = [
         O<sub>2</sub> mg/L
       </>
     ),
-    data: process.env.NODE_ENV ? JSON.parse(process.env.REACT_APP_TEST_DATA) : dataMGL,
+    data: process.env.NODE_ENV
+      ? JSON.parse(process.env.REACT_APP_TEST_DATA)
+      : dataMGL,
     yTitle: "mg/L",
     title: "Oxygen (mg/L)",
     type: "O2C",
@@ -158,6 +162,12 @@ const charts = [
   },
 ]
 
-console.dir(process.env)
+const mapCenter = { lat: 37.739566, lng: -25.343753 }
+const buoys = [
+  { lat: 37.686081, lng: -24.605611, key: "B25825" },
+  { lat: 37.686081, lng: -26.005611, key: "B4242" },
+  { lat: 38.066081, lng: -25.385611, key: "B8952" },
+  { lat: 37.366081, lng: -25.225611, key: "B1482" },
+]
 
-export { O2, Misc, charts }
+export { O2, Misc, charts, mapCenter, buoys }
