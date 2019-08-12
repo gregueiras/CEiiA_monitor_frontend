@@ -142,7 +142,6 @@ class App extends Component {
       marginRight: "0.5em",
       marginTop: "0.5em",
     }
-    console.log(data.map(({ name }) => name))
 
     return (
       <div className="app" style={{ ...style, position: "relative" }}>

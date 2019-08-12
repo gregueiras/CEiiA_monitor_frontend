@@ -5,7 +5,8 @@ import MyMap from "./Monitor/MyMap"
 import Constants from "style/Constants"
 import "react-tabs/style/react-tabs.css"
 import md5 from "md5"
-import MyChartsTabs from "./Monitor/MyChartsTabs";
+import MyChartsTabs from "./Monitor/MyChartsTabs"
+import { GoX } from "react-icons/go"
 
 class Monitor extends React.Component {
   constructor(props) {
@@ -27,8 +28,7 @@ class Monitor extends React.Component {
 
     const json = await data.json()
 
-    console.log(json)
-    this.setState({ ...json})
+    this.setState({ ...json })
   }
 
   render() {
@@ -47,9 +47,14 @@ class Monitor extends React.Component {
       <div style={{ ...monitorStyle, ...style }}>
         <div style={panelHeaderStyle}>
           <h2 style={headerStyle}>{location}</h2>
-          <h5 style={{ ...headerStyle, fontWeight: 400 }}>
-            Last Update: 12:40
-          </h5>
+          <div style={{ display: "flex" }}>
+            <h5 style={{ ...headerStyle, fontWeight: 400 }}>
+              Last Update: 12:40
+            </h5>
+            <button style={buttonStyle} onClick={() => this.props.removeMonitor(location)}>
+              <GoX style={crossStyle} />
+            </button>
+          </div>
         </div>
         <div
           style={{
@@ -100,7 +105,13 @@ class Monitor extends React.Component {
             {!misc && <p>No miscellaneous data</p>}
           </div>
         </div>
-        <MyChartsTabs charts={charts} selectedTab={0} style={style} liveUpdate={liveUpdate} location={location}/>
+        <MyChartsTabs
+          charts={charts}
+          selectedTab={0}
+          style={style}
+          liveUpdate={liveUpdate}
+          location={location}
+        />
       </div>
     )
   }
@@ -119,11 +130,22 @@ const panelHeaderStyle = {
 }
 
 const monitorStyle = {
-  fontFamily: Constants.fontFamily,
   background: Constants.lightBackground,
   color: Constants.whiteText,
   padding: "1em",
   paddingTop: "1em",
+}
+
+const crossStyle = {
+  verticalAlign: "middle",
+  fontSize: 40,
+}
+
+const buttonStyle = {
+  background: "none",
+  border: "none",
+  color: "#FFF",
+  cursor: "pointer",
 }
 
 export default Monitor
