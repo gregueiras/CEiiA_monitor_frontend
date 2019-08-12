@@ -3,10 +3,37 @@ import ReactTable from "react-table"
 import "react-table/react-table.css"
 import { ReactTableDefaults } from "react-table"
 import Constants from "style/Constants"
+import Headers from "data/headers"
 
 class Table extends React.Component {
+  constructor(props) {
+    super(props)
+    const { data, schema } = props
+
+    const newSchema = schema.map((content, index) => {
+      let toReturn = { ...content }
+      if (index === 0) {
+        toReturn = { ...toReturn, ...firstCellStyle }
+      } else {
+        toReturn = { ...toReturn, ...cellStyle }
+      }
+
+      if (!toReturn.Header) {
+        const acc = content.accessor.toLowerCase()
+        toReturn.Header = Headers[`${acc}`]
+      }
+
+      return toReturn
+    })
+
+    this.state = {
+      data,
+      schema: newSchema,
+    }
+  }
+
   render() {
-    const { data, schema } = this.props
+    const { data, schema } = this.state
 
     const style = {
       border: 0,
@@ -43,6 +70,21 @@ const columnStyle = {
     borderTopColor: "rgb(204, 204, 204)",
     fontSize: Constants.smallText,
   },
+}
+
+const cellStyle = {
+  style: {
+    textAlign: Constants.textAlign,
+  },
+  width: Constants.cellWidth,
+}
+
+const firstCellStyle = {
+  style: {
+    color: Constants.lightText,
+    fontSize: Constants.smallText,
+  },
+  width: Constants.cellWidth,
 }
 
 Object.assign(ReactTableDefaults.column, {

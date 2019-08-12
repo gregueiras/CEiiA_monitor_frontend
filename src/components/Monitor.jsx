@@ -1,23 +1,47 @@
 import React from "react"
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs"
 import Table from "./Monitor/Table"
-import MyChart from "./Monitor/MyChart"
 import MyMap from "./Monitor/MyMap"
 import Constants from "style/Constants"
 import "react-tabs/style/react-tabs.css"
+import md5 from "md5"
+import MyChartsTabs from "./Monitor/MyChartsTabs";
 
 class Monitor extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { ...props }
+  }
+
+  componentDidMount() {
+    const { location } = this.state
+    this.loadData(location)
+  }
+
+  async loadData(location) {
+    const hash = md5(location).toUpperCase()
+    const data = await fetch(
+      `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${hash}`
+    )
+
+    const json = await data.json()
+
+    console.log(json)
+    this.setState({ ...json})
+  }
+
   render() {
     const {
       charts,
       o2,
       misc,
-      location = "Your Location",
+      location,
       style,
       mapCenter,
       buoys,
       liveUpdate,
-    } = this.props
+    } = this.state
 
     return (
       <div style={{ ...monitorStyle, ...style }}>
@@ -76,39 +100,7 @@ class Monitor extends React.Component {
             {!misc && <p>No miscellaneous data</p>}
           </div>
         </div>
-        <div>
-          <Tabs>
-            <TabList>
-              {charts &&
-                charts.map(({ name }, index) => (
-                  <Tab key={index} style={{ fontSize: Constants.mediumText }}>
-                    {name}
-                  </Tab>
-                ))}
-            </TabList>
-
-            {charts &&
-              charts.map(({ data, yTitle, title, type }, index) => {
-                if (data) {
-                  return (
-                    <TabPanel key={index}>
-                      <MyChart
-                        style={style}
-                        title={title}
-                        yTitle={yTitle}
-                        data={data}
-                        location={location}
-                        type={type}
-                        liveUpdate={liveUpdate}
-                      />
-                    </TabPanel>
-                  )
-                } else {
-                  return <TabPanel key={index}></TabPanel>
-                }
-              })}
-          </Tabs>{" "}
-        </div>
+        <MyChartsTabs charts={charts} selectedTab={0} style={style} liveUpdate={liveUpdate} location={location}/>
       </div>
     )
   }

@@ -13,7 +13,6 @@ import {
 import Socket from "api/liveUpdate"
 import "style/charts.css"
 
-
 class App extends Component {
   _isMounted = false
 
@@ -143,6 +142,7 @@ class App extends Component {
       marginRight: "0.5em",
       marginTop: "0.5em",
     }
+    console.log(data.map(({ name }) => name))
 
     return (
       <div className="app" style={{ ...style, position: "relative" }}>
@@ -166,8 +166,8 @@ class App extends Component {
 
           <YAxis>
             <YAxis.Title>{yTitle}</YAxis.Title>
-            {data.map(({ name, data: dataBuoy }) => (
-              <LineSeries data={dataBuoy} key={name} name={name} />
+            {data.map(({ name, data: dataBuoy }, index) => (
+              <LineSeries data={dataBuoy} key={index} name={name} />
             ))}
           </YAxis>
         </HighchartsChart>
