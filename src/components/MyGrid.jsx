@@ -11,6 +11,7 @@ class MyGrid extends React.Component {
               location={location}
               liveUpdate={liveUpdate}
               removeMonitor={removeMonitor}
+              index={index}
             />
           </li>
         ))}

@@ -86,8 +86,6 @@ class MyModal extends Component {
       },
     }
 
-    console.log(style)
-
     return (
       <div style={style}>
         <div

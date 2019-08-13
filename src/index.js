@@ -13,7 +13,6 @@ class App extends Component {
     this.state = {
       monitors: [],
     }
-
   }
 
   createMonitor(location, liveUpdate) {
@@ -25,29 +24,30 @@ class App extends Component {
     this.setState({
       monitors: newMonitors,
     })
+    this.resizeCharts()
   }
 
-  removeMonitor(location) {
-    console.log("REMOVE ", location)
-    const newMonitors = this.state.monitors.filter(monitor => {
-      console.log(monitor.location === location)
-      return location !== monitor.location
-    })
-
-    console.log(newMonitors)
+  removeMonitor(index) {
+    const newMonitors = this.state.monitors
+    newMonitors.splice(index, 1)
 
     this.setState({
       monitors: newMonitors,
     })
+    this.resizeCharts()
   }
 
+  resizeCharts() {
+    setTimeout(() => window.dispatchEvent(new Event("resize")), 10)
+    setTimeout(() => window.dispatchEvent(new Event("resize")), 500)
+  }
 
   render() {
     const { monitors } = this.state
 
     return (
       <div>
-        <Modal createMonitor={this.createMonitor}/>
+        <Modal createMonitor={this.createMonitor} />
         <MyGrid monitors={monitors} removeMonitor={this.removeMonitor} />
       </div>
     )

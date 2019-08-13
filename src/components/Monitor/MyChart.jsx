@@ -50,7 +50,6 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    console.log("UNMOUNT")
     this._isMounted = false
     this.socket.unsubscribeTo(this.location, err => this.handleStopLiveUpdate())
   }
@@ -80,7 +79,6 @@ class App extends Component {
           let newData = data.slice(eraseOldest ? 1 : 0) // 0 to Add, 1 to Delete Oldest Record
           newData = [...newData, newPoint]
 
-          console.log(data)
           return newData
         }
       } catch {}

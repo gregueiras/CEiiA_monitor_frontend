@@ -41,6 +41,7 @@ class Monitor extends React.Component {
       mapCenter,
       buoys,
       liveUpdate,
+      index,
     } = this.state
 
     return (
@@ -51,7 +52,7 @@ class Monitor extends React.Component {
             <h5 style={{ ...headerStyle, fontWeight: 400 }}>
               Last Update: 12:40
             </h5>
-            <button style={buttonStyle} onClick={() => this.props.removeMonitor(location)}>
+            <button style={buttonStyle} onClick={() => this.props.removeMonitor(index)}>
               <GoX style={crossStyle} />
             </button>
           </div>
