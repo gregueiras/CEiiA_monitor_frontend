@@ -1,20 +1,23 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import Monitor from "components/Monitor"
+import Modal from "components/Modal"
+import { GoPlus } from "react-icons/go"
+import Constants from "style/Constants"
+import HoverButton from "components/Buttons/HoverButton"
 import "style/grid.css"
-import Autocomplete from "components/Autocomplete"
-
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.createMonitor = this.createMonitor.bind(this)
     this.removeMonitor = this.removeMonitor.bind(this)
+    this.toggleModalHandler = this.toggleModalHandler.bind(this)
 
     this.state = {
       monitors: [],
       suggestions: [],
-      modalShowing: false,
+      modalShowing: true,
     }
 
     this.loadSuggestions()
@@ -54,15 +57,9 @@ class App extends Component {
     })
   }
 
-  openModalHandler = () => {
+  toggleModalHandler() {
     this.setState({
-      modalShowing: true,
-    })
-  }
-
-  closeModalHandler = () => {
-    this.setState({
-      modalShowing: false,
+      modalShowing: !this.state.modalShowing,
     })
   }
 
@@ -70,7 +67,7 @@ class App extends Component {
     const { monitors, suggestions } = this.state
 
     return (
-      <>
+      <div>
         <ul className="monitors">
           {monitors.map(({ location, liveUpdate }, index) => (
             <li key={location + index}>
@@ -82,19 +79,51 @@ class App extends Component {
             </li>
           ))}
         </ul>
-        <button className="open-modal-btn" onClick={this.openModalHandler} style={{position: "absolute", right: 20, bottom: 20}}>
-          Open Modal
-        </button>
-        <Autocomplete
+        <Modal
           className="modal"
           show={this.state.modalShowing}
-          close={this.closeModalHandler}
+          close={this.toggleModalHandler}
           onSubmit={this.createMonitor}
           suggestions={suggestions}
         />
-      </>
+        <HoverButton
+          outerStyle={{ ...style.position, ...style.modalButton }}
+          hoverStyle={style.buttonHover}
+          onClick={this.toggleModalHandler}
+        >
+          <GoPlus style={{ ...style.position, ...style.modalButtonSVG }} />
+        </HoverButton>
+      </div>
     )
   }
+}
+
+const style = {
+  position: {
+    right: 20,
+    bottom: 20,
+    position: "absolute",
+  },
+  modalButton: {
+    background: Constants.lightBackground,
+    border: 0,
+    borderRadius: 50,
+    color: "white",
+    padding: 20,
+    textAlign: "center",
+    cursor: "pointer",
+    width: 50,
+    height: 50,
+  },
+  modalButtonSVG: {
+    width: 35,
+    height: 35,
+    right: 7,
+    bottom: 7,
+  },
+  buttonHover: {
+    background: Constants.hoverBackground,
+  },
 }
 
 ReactDOM.render(<App />, document.getElementById("root"))
