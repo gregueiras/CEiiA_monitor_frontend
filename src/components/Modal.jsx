@@ -6,11 +6,12 @@ import MyModal from "components/Modal/MyModal"
 class Modal extends Component {
   constructor(props) {
     super(props)
+    const { modalShowing } = props
 
     this.toggleModalHandler = this.toggleModalHandler.bind(this)
     this.state = {
       suggestions: [],
-      modalShowing: true,
+      modalShowing,
     }
 
     this.loadSuggestions()

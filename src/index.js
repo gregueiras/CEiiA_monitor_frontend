@@ -10,8 +10,15 @@ class App extends Component {
     this.createMonitor = this.createMonitor.bind(this)
     this.removeMonitor = this.removeMonitor.bind(this)
 
+    let monitors
+
+    try {
+      monitors = JSON.parse(localStorage.getItem("monitors"))
+    } catch (error) {
+      monitors = []
+    }
     this.state = {
-      monitors: [],
+      monitors: monitors,
     }
   }
 
@@ -24,6 +31,7 @@ class App extends Component {
     this.setState({
       monitors: newMonitors,
     })
+    localStorage.setItem("monitors", JSON.stringify(newMonitors))
     this.resizeCharts()
   }
 
@@ -34,6 +42,7 @@ class App extends Component {
     this.setState({
       monitors: newMonitors,
     })
+    localStorage.setItem("monitors", JSON.stringify(newMonitors))
     this.resizeCharts()
   }
 
@@ -47,7 +56,10 @@ class App extends Component {
 
     return (
       <div>
-        <Modal createMonitor={this.createMonitor} />
+        <Modal
+          createMonitor={this.createMonitor}
+          modalShowing={monitors && monitors.length === 0}
+        />
         <MyGrid monitors={monitors} removeMonitor={this.removeMonitor} />
       </div>
     )
