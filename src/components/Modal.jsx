@@ -1,235 +1,106 @@
-import React from "react"
-import Select from "react-select"
-import Constants from "style/Constants"
+import React, { Component } from "react"
+import { GoPlus } from "react-icons/go"
 import HoverButton from "components/Buttons/HoverButton"
-import { GoAlert, GoX } from "react-icons/go"
-
-class Modal extends React.Component {
+import Constants from "style/Constants"
+import MyModal from "components/Modal/MyModal"
+class Modal extends Component {
   constructor(props) {
     super(props)
 
-    this.createMonitor = this.createMonitor.bind(this)
-    this.toggleLiveUpdate = this.toggleLiveUpdate.bind(this)
-
-    const { suggestions } = this.props
-    const options = suggestions.map(suggestion => {
-      return {
-        value: suggestion,
-        label: suggestion,
-      }
-    })
-
+    this.toggleModalHandler = this.toggleModalHandler.bind(this)
     this.state = {
-      selectedOption: null,
-      options,
-      liveUpdate: true,
-      error: null,
+      suggestions: [],
+      modalShowing: true,
     }
+
+    this.loadSuggestions()
   }
 
-  componentWillReceiveProps({ suggestions }) {
-    const options = suggestions.map(suggestion => {
-      return {
-        value: suggestion,
-        label: suggestion,
-      }
-    })
+  async loadSuggestions() {
+    const data = await fetch(`${process.env.REACT_APP_BACKEND_API}/`)
+    const json = await data.json()
 
     this.setState({
-      options,
+      suggestions: json,
     })
   }
 
-  handleChange = selectedOption => {
-    this.setState({ selectedOption })
-  }
-
-  toggleLiveUpdate() {
-    const { liveUpdate } = this.state
+  toggleModalHandler() {
     this.setState({
-      liveUpdate: !liveUpdate,
+      modalShowing: !this.state.modalShowing,
     })
-  }
-  createMonitor() {
-    const { selectedOption, liveUpdate } = this.state
-
-    if (selectedOption) {
-      this.props.close()
-      this.props.onSubmit(selectedOption.label, liveUpdate)
-      this.setState({
-        selectedOption: null,
-        error: null,
-      })
-    } else {
-      this.setState({
-        error: "Location is required",
-      })
-    }
   }
 
   render() {
-    const { selectedOption, options, liveUpdate, error } = this.state
-    const { style, close } = this.props
-
-    const selectStyle = {
-      control: (provided, state) => {
-        let errorStyle = {
-          border: "1px solid red",
-        }
-
-        if (error)
-          return {
-            ...provided,
-            ...errorStyle,
-          }
-        else return provided
-      },
-    }
-
-    console.log(style)
+    const { modalShowing, suggestions } = this.state
+    const { createMonitor } = this.props
 
     return (
-      <div style={style}>
-        <div
-          style={{
-            ...styles.containerStyle,
-            transform: this.props.show
-              ? "translateY(0vh)"
-              : "translateY(-100vh)",
-            opacity: this.props.show ? "1" : "0",
-          }}
+      <div style={modalShowing ? style.backModal : {}}>
+        <MyModal
+          show={modalShowing}
+          close={this.toggleModalHandler}
+          onSubmit={createMonitor}
+          suggestions={suggestions}
+          style={modalShowing ? style.modal : { display: "none" }}
+        />
+        <HoverButton
+          outerStyle={{ ...style.position, ...style.modalButton }}
+          hoverStyle={style.buttonHover}
+          onClick={this.toggleModalHandler}
         >
-          <div style={styles.header}>
-            <span style={styles.headerText}>Add a new location</span>
-            <button style={styles.buttonStyle} onClick={close}>
-              <GoX style={styles.crossStyle} />
-            </button>
-          </div>
-          <div style={{ marginRight: 10, marginLeft: 10 }}>
-            <Select
-              value={selectedOption}
-              onChange={this.handleChange}
-              options={options}
-              placeholder="Select a location"
-              aria-label="Location Selector"
-              aria-required="true"
-              styles={selectStyle}
-              error={error}
-            />
-            {error && (
-              <span style={styles.errorStyle}>
-                <GoAlert
-                  style={{ marginRight: 5, verticalAlign: "text-bottom" }}
-                />
-                {error}
-              </span>
-            )}
-            <label style={styles.label}>
-              <input
-                type="checkbox"
-                name={"Live Update"}
-                checked={liveUpdate}
-                onChange={this.toggleLiveUpdate}
-                style={styles.checkbox}
-              />
-              {"Live Update"}
-            </label>
-          </div>
-          <HoverButton
-            outerStyle={styles.button}
-            hoverStyle={styles.buttonHover}
-            onClick={this.createMonitor}
-          >
-            <span>Add New Location</span>
-          </HoverButton>
-        </div>
+          <GoPlus style={{ ...style.position, ...style.modalButtonSVG }} />
+        </HoverButton>
       </div>
     )
   }
 }
 
-const styles = {
-  trackStyle: { height: 15 },
-  thumbStyle: {
-    position: "absolute",
-    width: 30,
-    height: 30,
-    boxShadow: "0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24)",
-    display: "flex",
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
+const style = {
+  position: {
+    right: 20,
+    bottom: 20,
+    position: "fixed",
   },
-  thumbStyleHover: { width: 32, height: 32 },
-  containerStyle: {
-    maxWidth: "minmax(300px, 1fr)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "space-between",
-    background: "white",
-    borderRadius: 6,
-    boxShadow: "0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17)",
-    margin: "100px auto 0",
-    transition: "all .8s",
-    width: "40%",
-    height: "50vh",
-  },
-  header: {
+  modalButton: {
+    zIndex: 2,
     background: Constants.lightBackground,
-    height: "40px",
-    lineHeight: "40px",
-    padding: "5px 20px",
-    color: "white",
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    marginBottom: "1em",
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  headerText: {
-    marginTop: 0,
-    marginBottom: 0,
-  },
-  button: {
-    width: "fit-content",
-    padding: 10,
-    alignSelf: "center",
-    marginTop: "auto",
-    marginBottom: "1em",
     border: 0,
-    borderRadius: 3,
-    background: Constants.lightBackground,
+    borderRadius: 50,
     color: "white",
+    padding: 20,
+    textAlign: "center",
     cursor: "pointer",
+    width: 50,
+    height: 50,
+    WebkitBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+    MozBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+    boxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+  },
+  modalButtonSVG: {
+    width: 35,
+    height: 35,
+    right: 27,
+    bottom: 27,
   },
   buttonHover: {
     background: Constants.hoverBackground,
   },
-  label: {
-    marginTop: "0.5em",
-    display: "block",
+  backModal: {
+    position: "absolute",
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
   },
-  checkbox: {
-    width: 16,
-    height: 16,
-  },
-  errorStyle: {
-    color: "red",
-    paddingLeft: "0.2em",
-    paddingTop: "0.2em",
-    display: "block",
-    fontStyle: "italic",
-  },
-  crossStyle: {
-    verticalAlign: "middle",
-    fontSize: 40,
-  },
-
-  buttonStyle: {
-    background: "none",
-    border: "none",
-    color: "#FFF",
-    cursor: "pointer",
+  modal: {
+    position: "fixed",
+    zIndex: 3,
+    marginLeft: "auto",
+    marginRight: " auto",
+    width: "100%",
+    transform: "translate(-50%, 0)",
+    left: "50%",
   },
 }
 
