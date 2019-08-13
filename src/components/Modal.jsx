@@ -2,6 +2,7 @@ import React from "react"
 import Select from "react-select"
 import Constants from "style/Constants"
 import HoverButton from "components/Buttons/HoverButton"
+import { GoAlert } from "react-icons/go"
 
 class Modal extends React.Component {
   constructor(props) {
@@ -53,52 +54,90 @@ class Modal extends React.Component {
     const { selectedOption, liveUpdate } = this.state
 
     if (selectedOption) {
+      this.props.close()
       this.props.onSubmit(selectedOption.label, liveUpdate)
       this.setState({
         selectedOption: null,
+        error: null,
       })
     } else {
       this.setState({
-        error: "Select an option",
+        error: "Location is required",
       })
     }
   }
 
   render() {
-    const { selectedOption, options, liveUpdate } = this.state
+    const { selectedOption, options, liveUpdate, error } = this.state
+    const { style } = this.props
+
+    const selectStyle = {
+      control: (provided, state) => {
+        let errorStyle = {
+          border: "1px solid red",
+        }
+
+        if (error)
+          return {
+            ...provided,
+            ...errorStyle,
+          }
+        else return provided
+      },
+    }
+
+    console.log(style)
 
     return (
-      <div
-        style={{
-          ...styles.containerStyle,
-          transform: this.props.show ? "translateY(0vh)" : "translateY(-100vh)",
-          opacity: this.props.show ? "1" : "0",
-        }}
-      >
-        <header style={styles.header}>Add a new location</header>
-        <div style={{ marginRight: 10, marginLeft: 10 }}>
-          <Select
-            value={selectedOption}
-            onChange={this.handleChange}
-            options={options}
-            placeholder="Select a location"
-            aria-label="Location Selector"
-            aria-required="true"
-          />
-          <label style={styles.label}>
-            <input
-              type="checkbox"
-              name={"Live Update"}
-              checked={liveUpdate}
-              onChange={this.toggleLiveUpdate}
-              style={styles.checkbox}
+      <div style={style}>
+        <div
+          style={{
+            ...styles.containerStyle,
+            transform: this.props.show
+              ? "translateY(0vh)"
+              : "translateY(-100vh)",
+            opacity: this.props.show ? "1" : "0",
+          }}
+        >
+          <header style={styles.header}>Add a new location</header>
+          <div style={{ marginRight: 10, marginLeft: 10 }}>
+            <Select
+              value={selectedOption}
+              onChange={this.handleChange}
+              options={options}
+              placeholder="Select a location"
+              aria-label="Location Selector"
+              aria-required="true"
+              styles={selectStyle}
+              error={error}
             />
-            {"Live Update"}
-          </label>
+            {error && (
+              <span style={styles.errorStyle}>
+                <GoAlert
+                  style={{ marginRight: 5, verticalAlign: "text-bottom" }}
+                />
+                {error}
+              </span>
+            )}
+            <label style={styles.label}>
+              <input
+                type="checkbox"
+                name={"Live Update"}
+                checked={liveUpdate}
+                onChange={this.toggleLiveUpdate}
+                style={styles.checkbox}
+              />
+              {"Live Update"}
+            </label>
+          </div>
+          <HoverButton
+            outerStyle={styles.button}
+            hoverStyle={styles.buttonHover}
+            onClick={this.createMonitor}
+          >
+            <span>Add New Location</span>
+          </HoverButton>
         </div>
-        <HoverButton outerStyle={styles.button} hoverStyle={styles.buttonHover}>
-          <span>Add New Location</span>
-        </HoverButton>
       </div>
     )
   }
@@ -163,6 +202,13 @@ const styles = {
   checkbox: {
     width: 16,
     height: 16,
+  },
+  errorStyle: {
+    color: "red",
+    paddingLeft: "0.2em",
+    paddingTop: "0.2em",
+    display: "block",
+    fontStyle: "italic",
   },
 }
 

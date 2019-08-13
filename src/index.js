@@ -64,10 +64,27 @@ class App extends Component {
   }
 
   render() {
-    const { monitors, suggestions } = this.state
+    const { monitors, suggestions, modalShowing } = this.state
 
     return (
       <div>
+        <div style={modalShowing ? style.backModal : {}}>
+          <Modal
+            className="modal"
+            show={modalShowing}
+            close={this.toggleModalHandler}
+            onSubmit={this.createMonitor}
+            suggestions={suggestions}
+            style={modalShowing ? style.Modal : { display: "none"  }}
+          />
+          <HoverButton
+            outerStyle={{ ...style.position, ...style.modalButton }}
+            hoverStyle={style.buttonHover}
+            onClick={this.toggleModalHandler}
+          >
+            <GoPlus style={{ ...style.position, ...style.modalButtonSVG }} />
+          </HoverButton>
+        </div>
         <ul className="monitors">
           {monitors.map(({ location, liveUpdate }, index) => (
             <li key={location + index}>
@@ -79,20 +96,6 @@ class App extends Component {
             </li>
           ))}
         </ul>
-        <Modal
-          className="modal"
-          show={this.state.modalShowing}
-          close={this.toggleModalHandler}
-          onSubmit={this.createMonitor}
-          suggestions={suggestions}
-        />
-        <HoverButton
-          outerStyle={{ ...style.position, ...style.modalButton }}
-          hoverStyle={style.buttonHover}
-          onClick={this.toggleModalHandler}
-        >
-          <GoPlus style={{ ...style.position, ...style.modalButtonSVG }} />
-        </HoverButton>
       </div>
     )
   }
@@ -102,9 +105,10 @@ const style = {
   position: {
     right: 20,
     bottom: 20,
-    position: "absolute",
+    position: "fixed",
   },
   modalButton: {
+    zIndex: 2,
     background: Constants.lightBackground,
     border: 0,
     borderRadius: 50,
@@ -114,15 +118,34 @@ const style = {
     cursor: "pointer",
     width: 50,
     height: 50,
+    WebkitBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+    MozBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+    boxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
   },
   modalButtonSVG: {
     width: 35,
     height: 35,
-    right: 7,
-    bottom: 7,
+    right: 27,
+    bottom: 27,
   },
   buttonHover: {
     background: Constants.hoverBackground,
+  },
+  backModal: {
+    position: "absolute",
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
+  },
+  Modal: {
+    position: "fixed",
+    zIndex: 3,
+    marginLeft: "auto",
+    marginRight: " auto",
+    width: "100%",
+    transform: "translate(-50%, 0)",
+    left: "50%",
   },
 }
 
