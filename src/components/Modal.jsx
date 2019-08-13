@@ -2,7 +2,7 @@ import React from "react"
 import Select from "react-select"
 import Constants from "style/Constants"
 import HoverButton from "components/Buttons/HoverButton"
-import { GoAlert } from "react-icons/go"
+import { GoAlert, GoX } from "react-icons/go"
 
 class Modal extends React.Component {
   constructor(props) {
@@ -69,7 +69,7 @@ class Modal extends React.Component {
 
   render() {
     const { selectedOption, options, liveUpdate, error } = this.state
-    const { style } = this.props
+    const { style, close } = this.props
 
     const selectStyle = {
       control: (provided, state) => {
@@ -99,7 +99,12 @@ class Modal extends React.Component {
             opacity: this.props.show ? "1" : "0",
           }}
         >
-          <header style={styles.header}>Add a new location</header>
+          <div style={styles.header}>
+            <span style={styles.headerText}>Add a new location</span>
+            <button style={styles.buttonStyle} onClick={close}>
+              <GoX style={styles.crossStyle} />
+            </button>
+          </div>
           <div style={{ marginRight: 10, marginLeft: 10 }}>
             <Select
               value={selectedOption}
@@ -174,11 +179,16 @@ const styles = {
     height: "40px",
     lineHeight: "40px",
     padding: "5px 20px",
-    textAlign: "right",
     color: "white",
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     marginBottom: "1em",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  headerText: {
+    marginTop: 0,
+    marginBottom: 0,
   },
   button: {
     width: "fit-content",
@@ -209,6 +219,17 @@ const styles = {
     paddingTop: "0.2em",
     display: "block",
     fontStyle: "italic",
+  },
+  crossStyle: {
+    verticalAlign: "middle",
+    fontSize: 40,
+  },
+
+  buttonStyle: {
+    background: "none",
+    border: "none",
+    color: "#FFF",
+    cursor: "pointer",
   },
 }
 
