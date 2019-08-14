@@ -166,7 +166,6 @@ const styles = {
     alignItems: "space-between",
     background: "white",
     borderRadius: 6,
-    boxShadow: "0 5px 8px 0 rgba(0,0,0,0.2), 0 7px 20px 0 rgba(0,0,0,0.17)",
     margin: "100px auto 0",
     transition: "all .8s",
     width: "40%",

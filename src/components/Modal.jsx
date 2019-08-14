@@ -35,15 +35,18 @@ class Modal extends Component {
   render() {
     const { modalShowing, suggestions } = this.state
     const { createMonitor } = this.props
-
     return (
       <div style={modalShowing ? style.backModal : {}}>
         <MyModal
-          show={modalShowing}
+          show={{ ...modalShowing, ...style.shadow }}
           close={this.toggleModalHandler}
           onSubmit={createMonitor}
           suggestions={suggestions}
-          style={modalShowing ? style.modal : { display: "none" }}
+          style={
+            modalShowing
+              ? { ...style.modal, ...style.shadow }
+              : { display: "none" }
+          }
         />
         <HoverButton
           outerStyle={{ ...style.position, ...style.modalButton }}
@@ -102,6 +105,14 @@ const style = {
     width: "100%",
     transform: "translate(-50%, 0)",
     left: "50%",
+  },
+  shadow: {
+    WebkitBoxShadow:
+      "0px 0px 158px 400px rgba(0,0,0,0.9), inset 0px 0px 158px 200px rgba(0,0,0,0.9)",
+    MozBoxShadow:
+      "0px 0px 158px 400px rgba(0,0,0,0.9), inset 0px 0px 158px 200px rgba(0,0,0,0.9)",
+    boxShadow:
+      "0px 0px 158px 400px rgba(0,0,0,0.9), inset 0px 0px 158px 200px rgba(0,0,0,0.9)",
   },
 }
 
