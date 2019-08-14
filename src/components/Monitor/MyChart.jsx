@@ -84,6 +84,9 @@ class App extends Component {
       } catch {}
     }
 
+    const { updateLastUpdate } = this.props
+    updateLastUpdate(new Date())
+
     if (!this.state.liveUpdate) this.setState({ liveUpdate: true })
 
     if (!messageReceived) {

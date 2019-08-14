@@ -6,18 +6,31 @@ import Constants from "style/Constants"
 import "react-tabs/style/react-tabs.css"
 import md5 from "md5"
 import MyChartsTabs from "./Monitor/MyChartsTabs"
-import { GoX } from "react-icons/go"
+import MonitorHeader from "components/Monitor/MonitorHeader"
 
 class Monitor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = { ...props }
+    this.state = { ...props, lastUpdate: null }
+    this.updateTime = this.updateTime.bind(this)
   }
 
   componentDidMount() {
     const { location } = this.state
     this.loadData(location)
+  }
+
+  updateTime(date) {
+    const { lastUpdate } = this.state
+    const time = date.toLocaleTimeString("pt-PT", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+
+    if (!lastUpdate || time > lastUpdate) {
+      this.setState({ lastUpdate: time })
+    }
   }
 
   async loadData(location) {
@@ -29,6 +42,8 @@ class Monitor extends React.Component {
     const json = await data.json()
 
     this.setState({ ...json })
+    const date = new Date()
+    this.updateTime(date)
   }
 
   render() {
@@ -41,22 +56,20 @@ class Monitor extends React.Component {
       mapCenter,
       buoys,
       liveUpdate,
+      lastUpdate,
       index,
     } = this.state
 
+    const { removeMonitor } = this.props
+
     return (
       <div style={{ ...monitorStyle, ...style }}>
-        <div style={panelHeaderStyle}>
-          <h2 style={headerStyle}>{location}</h2>
-          <div style={{ display: "flex" }}>
-            <h5 style={{ ...headerStyle, fontWeight: 400 }}>
-              Last Update: 12:40
-            </h5>
-            <button style={buttonStyle} onClick={() => this.props.removeMonitor(index)}>
-              <GoX style={crossStyle} />
-            </button>
-          </div>
-        </div>
+        <MonitorHeader
+          location={location}
+          close={removeMonitor}
+          lastUpdate={lastUpdate}
+          index={index}
+        />
         <div
           style={{
             display: "flex",
@@ -112,41 +125,20 @@ class Monitor extends React.Component {
           style={style}
           liveUpdate={liveUpdate}
           location={location}
+          updateLastUpdate={this.updateTime}
         />
       </div>
     )
   }
 }
 
-const headerStyle = {
-  marginBottom: "0.5em",
-}
 
-const panelHeaderStyle = {
-  paddingLeft: "0.5em",
-  paddingRight: "0.5em",
-  background: Constants.darkBackground,
-  display: "flex",
-  justifyContent: "space-between",
-}
 
 const monitorStyle = {
   background: Constants.lightBackground,
   color: Constants.whiteText,
   padding: "1em",
   paddingTop: "1em",
-}
-
-const crossStyle = {
-  verticalAlign: "middle",
-  fontSize: 40,
-}
-
-const buttonStyle = {
-  background: "none",
-  border: "none",
-  color: "#FFF",
-  cursor: "pointer",
 }
 
 export default Monitor

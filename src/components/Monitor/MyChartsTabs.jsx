@@ -6,17 +6,17 @@ import Constants from "style/Constants"
 
 class MyChartsTabs extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      selectedTab: 0
+      selectedTab: 0,
     }
   }
 
   render() {
     const { selectedTab } = this.state
-    const { charts, style, liveUpdate, location } = this.props
-    
+    const { charts, style, liveUpdate, location, updateLastUpdate } = this.props
+
     return (
       <div>
         <Tabs
@@ -45,6 +45,7 @@ class MyChartsTabs extends Component {
                       location={location}
                       type={type}
                       liveUpdate={liveUpdate}
+                      updateLastUpdate={updateLastUpdate}
                     />
                   </TabPanel>
                 )
