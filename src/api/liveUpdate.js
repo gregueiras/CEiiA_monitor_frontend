@@ -2,7 +2,10 @@ import openSocket from "socket.io-client"
 import md5 from "md5"
 
 class Socket {
-  constructor(port = 3333) {
+  constructor() {
+    const port = process.env.BACKEND_API
+      ? process.env.BACKEND_API.split(":")[2]
+      : 4201
     this.socket = openSocket(`http://localhost:${port}`, {
       "force new connection": true,
     })

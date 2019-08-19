@@ -138,7 +138,7 @@ class MyModal extends Component {
             hoverStyle={styles.buttonHover}
             onClick={this.createMonitor}
           >
-            <span>Add New Location</span>
+            <span>Add a new Location</span>
           </HoverButton>
         </div>
       </div>

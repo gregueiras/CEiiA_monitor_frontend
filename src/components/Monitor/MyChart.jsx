@@ -92,6 +92,8 @@ class App extends Component {
     if (!messageReceived) {
       console.error(`Corrupted Message: ${messageReceived}`)
       return
+    } else {
+      console.log(`Message received ${messageReceived}`)
     }
 
     const [buoyID, timestamp, value] = JSON.parse(messageReceived)
