@@ -9,6 +9,7 @@ import {
   Title,
   LineSeries,
   Tooltip,
+  Legend,
 } from "react-jsx-highcharts"
 import Socket from "api/liveUpdate"
 import "style/charts.css"
@@ -58,30 +59,39 @@ class App extends Component {
     function addDataPoint(data, eraseOldest) {
       try {
         if (data) {
-          const [lastTime, lastValue] = data[data.length - 1]
-          const [last2Time, last2Value] = data[data.length - 2]
+          let newTime, newValue
+          if (!timestamp) {
+            const [lastTime] = data[data.length - 1]
+            const [last2Time] = data[data.length - 2]
 
-          const newPoint = []
-          let inc = Math.random() < 0.5 ? 1 : -1
+            newTime = lastTime + (lastTime - last2Time)
+          } else {
+            newTime = timestamp
+          }
 
-          const newTime = timestamp
-            ? timestamp
-            : lastTime + (lastTime - last2Time)
+          if (!value) {
+            const [, lastValue] = data[data.length - 1]
+            const [, last2Value] = data[data.length - 2]
 
-          const newValue = value
-            ? value
-            : parseFloat(
-                (lastValue + (lastValue - last2Value) * inc).toFixed(2)
-              )
+            const inc = Math.random() < 0.5 ? 1 : -1
+            newValue = parseFloat(
+              (lastValue + (lastValue - last2Value) * inc).toFixed(2)
+            )
+          } else {
+            newValue = value
+          }
 
-          newPoint.push(newTime)
-          newPoint.push(newValue)
+          const newPoint = [newTime, newValue]
+
           let newData = data.slice(eraseOldest ? 1 : 0) // 0 to Add, 1 to Delete Oldest Record
           newData = [...newData, newPoint]
+          console.log(newData)
 
           return newData
         }
       } catch {}
+      console.log(timestamp, value)
+      return [[timestamp, value]]
     }
 
     const { updateLastUpdate } = this.props
@@ -97,10 +107,12 @@ class App extends Component {
     }
 
     const [buoyID, timestamp, value] = JSON.parse(messageReceived)
-    console.log(`Message Received: ${messageReceived}`)
+
+    console.log([timestamp, value])
 
     if (this._isMounted) {
       const { data } = this.state
+      console.log(data.length)
       const newData = data.map(({ name, data: buoyData }) => {
         if (name === buoyID) {
           buoyData = addDataPoint(buoyData, false)
@@ -159,6 +171,7 @@ class App extends Component {
         <HighchartsChart oneToOne={true} styledMode>
           <Chart zoomType="x" type="datetime" />
           <Title>{title}</Title>
+          <Legend layout="vertical" align="right" verticalAlign="middle" />
 
           <Tooltip valueSuffix={yTitle ? ` ${yTitle}` : ""} shared />
 
