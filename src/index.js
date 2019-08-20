@@ -14,6 +14,8 @@ class App extends Component {
 
     try {
       monitors = JSON.parse(localStorage.getItem("monitors"))
+      if (!monitors)
+        monitors = []
     } catch (error) {
       monitors = []
     }
@@ -23,15 +25,20 @@ class App extends Component {
   }
 
   createMonitor(location, liveUpdate) {
-    const newMonitors = this.state.monitors.concat({
-      location,
-      liveUpdate,
-    })
+    const { monitors: oldMonitors } = this.state
+
+    const monitors = [
+      ...oldMonitors,
+      {
+        location,
+        liveUpdate,
+      },
+    ]
 
     this.setState({
-      monitors: newMonitors,
+      monitors,
     })
-    localStorage.setItem("monitors", JSON.stringify(newMonitors))
+    localStorage.setItem("monitors", JSON.stringify(monitors))
     this.resizeCharts()
   }
 
@@ -53,14 +60,13 @@ class App extends Component {
 
   render() {
     const { monitors } = this.state
-
     return (
       <div>
         <Modal
           createMonitor={this.createMonitor}
           modalShowing={monitors && monitors.length === 0}
         />
-        <MyGrid monitors={monitors} removeMonitor={this.removeMonitor} />
+        <MyGrid monitors={monitors || []} removeMonitor={this.removeMonitor} />
       </div>
     )
   }

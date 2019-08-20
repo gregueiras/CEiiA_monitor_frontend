@@ -56,6 +56,7 @@ class MyModal extends Component {
     if (selectedOption) {
       this.props.close()
       this.props.onSubmit(selectedOption.label, liveUpdate)
+
       this.setState({
         selectedOption: null,
         error: null,

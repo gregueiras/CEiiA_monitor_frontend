@@ -56,6 +56,8 @@ class App extends Component {
   }
 
   updateLiveData(messageReceived) {
+    console.log("UPDATE")
+
     function addDataPoint(data, eraseOldest) {
       try {
         if (data) {
