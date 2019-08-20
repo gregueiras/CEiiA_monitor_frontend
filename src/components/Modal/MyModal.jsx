@@ -176,6 +176,7 @@ const styles = {
     height: "40px",
     lineHeight: "40px",
     padding: "5px 20px",
+    paddingRight: 10,
     color: "white",
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
@@ -221,12 +222,12 @@ const styles = {
     verticalAlign: "middle",
     fontSize: 40,
   },
-
   buttonStyle: {
     background: "none",
     border: "none",
     color: "#FFF",
     cursor: "pointer",
+    padding: 0,
   },
 }
 

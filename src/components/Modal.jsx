@@ -77,9 +77,9 @@ const style = {
     cursor: "pointer",
     width: 50,
     height: 50,
-    WebkitBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
-    MozBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
-    boxShadow: "0px 0px 48px 22px rgba(0,0,0,0.7)",
+    WebkitBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.75)",
+    MozBoxShadow: "0px 0px 48px 22px rgba(0,0,0,0.75)",
+    boxShadow: "0px 0px 48px 22px rgba(0,0,0,0.75)",
   },
   modalButtonSVG: {
     width: 35,
