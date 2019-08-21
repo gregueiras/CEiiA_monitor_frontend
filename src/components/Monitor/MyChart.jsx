@@ -14,6 +14,7 @@ import {
 import Socket from "api/liveUpdate"
 import "style/charts.css"
 import md5 from "md5"
+import ReactTooltip from "react-tooltip"
 
 class App extends Component {
   _isMounted = false
@@ -43,17 +44,17 @@ class App extends Component {
         ? `${props.location}${props.type}`
         : `default`
 
-    this.updateData(props.location, props.type); 
-  
-  
+    this.updateData(props.location, props.type)
   }
 
   async updateData(location, type) {
-    const typeURL = `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${md5(location)}&wantedType=${type}`;
-    const temp = await fetch(typeURL);
-    const updatedData = await temp.json();
+    const typeURL = `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${md5(
+      location
+    )}&wantedType=${type}`
+    const temp = await fetch(typeURL)
+    const updatedData = await temp.json()
 
-    this.setState({data: updatedData})
+    this.setState({ data: updatedData })
   }
 
   componentDidMount() {
@@ -175,14 +176,19 @@ class App extends Component {
 
     return (
       <div className="app" style={{ ...style, position: "relative" }}>
-        <span
-          style={{
-            ...liveUpdateStyle,
-            backgroundColor: `rgb(${
-              liveUpdate ? "72, 173, 72" : "234, 67, 53"
-            })`,
-          }}
-        ></span>
+          <span data-tip data-for='liveUpdate'
+            style={{
+              ...liveUpdateStyle,
+              backgroundColor: `rgb(${
+                liveUpdate ? "72, 173, 72" : "234, 67, 53"
+              })`,
+            }}
+            ></span>
+        <ReactTooltip id='liveUpdate'>
+          <span>
+            Live Update {liveUpdate ? "On" : "Off"}
+          </span>
+          </ReactTooltip>
         <HighchartsChart oneToOne={true} styledMode>
           <Chart zoomType="x" type="datetime" />
           <Title>{title}</Title>
