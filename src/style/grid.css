@@ -1,7 +1,7 @@
 ul.monitors {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
   grid-gap: 0.3em;
 
   padding-left: 0;
@@ -12,6 +12,11 @@ ul.monitors li {
   max-width: 100%;
 }
 
+@media (max-width: 600px) {
+  .modalAddLocation {
+    width: 85%!important
+  }
+}
 
 * {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif

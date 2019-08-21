@@ -90,6 +90,7 @@ class MyModal extends Component {
     return (
       <div style={style}>
         <div
+        className="modalAddLocation"
           style={{
             ...styles.containerStyle,
             transform: this.props.show
