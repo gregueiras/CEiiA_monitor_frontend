@@ -13,6 +13,7 @@ import {
 } from "react-jsx-highcharts"
 import Socket from "api/liveUpdate"
 import "style/charts.css"
+import md5 from "md5"
 
 class App extends Component {
   _isMounted = false
@@ -41,6 +42,18 @@ class App extends Component {
       props.location && props.type
         ? `${props.location}${props.type}`
         : `default`
+
+    this.updateData(props.location, props.type); 
+  
+  
+  }
+
+  async updateData(location, type) {
+    const typeURL = `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${md5(location)}&wantedType=${type}`;
+    const temp = await fetch(typeURL);
+    const updatedData = await temp.json();
+
+    this.setState({data: updatedData})
   }
 
   componentDidMount() {
