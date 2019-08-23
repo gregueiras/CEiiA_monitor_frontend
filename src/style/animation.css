@@ -1,0 +1,57 @@
+ul.buttonContainer {
+  right: 20px;
+  bottom: 20px;
+  position: fixed;
+  height: 50px;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  z-index: 2;
+}
+
+ul.buttonContainer.animation {
+  transition: transform 0.25s cubic-bezier(0.39, 0.575, 0.565, 1);
+}
+
+.buttonContainer.animation:hover {
+  transform: translateY(-70px);
+}
+
+.buttonContainer li {
+  position: relative;
+  background-color: #f1f1f1;
+}
+
+.buttonContainer li::before,
+.buttonContainer li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.buttonContainer li::before {
+  top: 100%;
+}
+
+.buttonContainer li::after:not(:last-child) {
+  bottom: 100%;
+}
+
+
+
+.buttonContainer li.btn {
+  z-index: 2;
+  border: 0;
+  padding-bottom: 40px;
+  border-radius: 50%;
+  background: transparent;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+}
+
+.buttonContainer:hover li.btn {
+  padding-bottom: 18px;
+}

@@ -1,8 +1,9 @@
 import React, { Component } from "react"
-import { GoPlus } from "react-icons/go"
+import { GoPlus, GoGlobe } from "react-icons/go"
 import HoverButton from "components/Buttons/HoverButton"
 import Constants from "style/Constants"
 import MyModal from "components/Modal/MyModal"
+import "style/animation.css"
 class Modal extends Component {
   constructor(props) {
     super(props)
@@ -49,11 +50,13 @@ class Modal extends Component {
           }
         />
         <HoverButton
-          outerStyle={{ ...style.position, ...style.modalButton }}
-          hoverStyle={style.buttonHover}
+          animate
+          outerStyle={{ ...style.modalButton }}
+          hoverStyle={{ ...style.buttonHover }}
           onClick={this.toggleModalHandler}
         >
-          <GoPlus style={{ ...style.position, ...style.modalButtonSVG }} />
+          <GoPlus style={{ ...style.modalButtonSVG }} size={28} />
+          <GoGlobe style={{ ...style.modalButtonSVG }} size={28} />
         </HoverButton>
       </div>
     )
@@ -72,7 +75,6 @@ const style = {
     border: 0,
     borderRadius: 50,
     color: "white",
-    padding: 20,
     textAlign: "center",
     cursor: "pointer",
     width: 50,
@@ -82,10 +84,7 @@ const style = {
     boxShadow: "0px 0px 48px 22px rgba(0,0,0,0.75)",
   },
   modalButtonSVG: {
-    width: 35,
-    height: 35,
-    right: 27,
-    bottom: 27,
+    backgroundSize: "40 40",
   },
   buttonHover: {
     background: Constants.hoverBackground,
