@@ -4,7 +4,7 @@ import Constants from "style/Constants"
 import HoverButton from "components/Buttons/HoverButton"
 import { GoAlert, GoX } from "react-icons/go"
 
-class MyModal extends Component {
+class NewLocationModal extends Component {
   constructor(props) {
     super(props)
 
@@ -70,7 +70,7 @@ class MyModal extends Component {
 
   render() {
     const { selectedOption, options, liveUpdate, error } = this.state
-    const { style, close } = this.props
+    const { style, close, show } = this.props
 
     const selectStyle = {
       control: (provided, state) => {
@@ -86,17 +86,16 @@ class MyModal extends Component {
         else return provided
       },
     }
-
     return (
       <div style={style}>
         <div
-        className="modalAddLocation"
+          className="modalAddLocation"
           style={{
             ...styles.containerStyle,
-            transform: this.props.show
+            transform: show !== null
               ? "translateY(0vh)"
               : "translateY(-100vh)",
-            opacity: this.props.show ? "1" : "0",
+            opacity: show ? "1" : "0",
           }}
         >
           <div style={styles.header}>
@@ -233,4 +232,4 @@ const styles = {
   },
 }
 
-export default MyModal
+export default NewLocationModal

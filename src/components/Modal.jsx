@@ -2,8 +2,10 @@ import React, { Component } from "react"
 import { GoPlus, GoGlobe } from "react-icons/go"
 import HoverButton from "components/Buttons/HoverButton"
 import Constants from "style/Constants"
-import MyModal from "components/Modal/MyModal"
+import NewSimulationModal from "components/Modal/NewSimulationModal"
+import NewLocationModal from "components/Modal/NewLocationModal"
 import "style/animation.css"
+
 class Modal extends Component {
   constructor(props) {
     super(props)
@@ -27,9 +29,10 @@ class Modal extends Component {
     })
   }
 
-  toggleModalHandler() {
+  toggleModalHandler(idx) {
+    console.log(idx)
     this.setState({
-      modalShowing: !this.state.modalShowing,
+      modalShowing: idx,
     })
   }
 
@@ -38,13 +41,24 @@ class Modal extends Component {
     const { createMonitor } = this.props
     return (
       <div style={modalShowing ? style.backModal : {}}>
-        <MyModal
-          show={{ ...modalShowing, ...style.shadow }}
-          close={this.toggleModalHandler}
+        <NewLocationModal
+          show={{ ...style.shadow }}
+          close={() => this.toggleModalHandler(null)}
           onSubmit={createMonitor}
           suggestions={suggestions}
           style={
-            modalShowing
+            modalShowing === 0
+              ? { ...style.modal, ...style.shadow }
+              : { display: "none" }
+          }
+        />
+        <NewSimulationModal
+          show={{ ...style.shadow }}
+          close={() => this.toggleModalHandler(null)}
+          onSubmit={createMonitor}
+          suggestions={suggestions}
+          style={
+            modalShowing === 1
               ? { ...style.modal, ...style.shadow }
               : { display: "none" }
           }

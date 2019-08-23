@@ -30,9 +30,7 @@ class HoverButton extends Component {
   render() {
     const { onClick, outerStyle, hoverStyle, children, animate } = this.props
     const { hovering, hoveringIdx } = this.state
-
-    console.log(animate)
-
+    
     if (children.length > 1) {
       return (
         <ul className={`buttonContainer ${animate ? "animation" : ""}`}>
@@ -45,7 +43,7 @@ class HoverButton extends Component {
             return (
               <li key={idx} className="btn">
                 <button
-                  onClick={onClick}
+                  onClick={() => onClick(idx)}
                   style={style}
                   onMouseOver={() => this.hoverIn(idx)}
                   onMouseOut={this.hoverOut}

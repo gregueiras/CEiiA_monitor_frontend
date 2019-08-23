@@ -14,8 +14,7 @@ class App extends Component {
 
     try {
       monitors = JSON.parse(localStorage.getItem("monitors"))
-      if (!monitors)
-        monitors = []
+      if (!monitors) monitors = []
     } catch (error) {
       monitors = []
     }
@@ -62,10 +61,7 @@ class App extends Component {
     const { monitors } = this.state
     return (
       <div>
-        <Modal
-          createMonitor={this.createMonitor}
-          modalShowing={monitors && monitors.length === 0}
-        />
+        <Modal createMonitor={this.createMonitor} modalShowing={1} />
         <MyGrid monitors={monitors || []} removeMonitor={this.removeMonitor} />
       </div>
     )
