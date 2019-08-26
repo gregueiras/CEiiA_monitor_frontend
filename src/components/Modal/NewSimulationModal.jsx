@@ -2,13 +2,14 @@ import React, { Component } from "react"
 import Constants from "style/Constants"
 import HoverButton from "components/Buttons/HoverButton"
 import { GoX } from "react-icons/go"
-import MyLocationPicker from "components/MyLocationPicker"
-import MySlider from "components/Slider/MySlider"
+import FirstPage from "./NewSimulation/FirstPage"
+import SecondPage from "./NewSimulation/SecondPage"
 
 class NewLocationModal extends Component {
   state = {
     area: true,
     radius: 2,
+    activePage: 0,
   }
 
   constructor(props) {
@@ -17,6 +18,7 @@ class NewLocationModal extends Component {
     this.handleLocationChange = this.handleLocationChange.bind(this)
     this.handleAreaChange = this.handleAreaChange.bind(this)
     this.handleRandomChange = this.handleRandomChange.bind(this)
+    this.setPage = this.setPage.bind(this)
   }
 
   toggleAreaUpdate() {
@@ -41,8 +43,12 @@ class NewLocationModal extends Component {
     this.setState({ lowerBound, upperBound })
   }
 
+  setPage(activePage) {
+    this.setState({ activePage })
+  }
+
   render() {
-    const { area, radius } = this.state
+    const { area, radius, activePage } = this.state
     const { style, close, show } = this.props
 
     return (
@@ -61,62 +67,41 @@ class NewLocationModal extends Component {
               <GoX style={styles.crossStyle} />
             </button>
           </div>
-          <div style={{ marginRight: 10, marginLeft: 10 }}>
-            <div>
-              <span>Initial Position:</span>
-              <MyLocationPicker
-                onChange={this.handleLocationChange}
+          <div style={{ flexGrow: 1 }}>
+            {activePage === 0 && (
+              <FirstPage
                 radius={radius}
-                visible={area}
+                area={area}
+                handleLocationChange={this.handleLocationChange}
+                toggleAreaUpdate={this.toggleAreaUpdate}
+                handleAreaChange={this.handleAreaChange}
+                handleRandomChange={this.handleRandomChange}
               />
-            </div>
-            <div>
-              <label style={styles.label}>
-                <input
-                  type="checkbox"
-                  name={"Area restriction"}
-                  checked={area}
-                  onChange={this.toggleAreaUpdate}
-                  style={styles.checkbox}
-                />
-                {"Area restriction"}
-              </label>
-            </div>
-            {area && (
-              <div>
-                <span>Area radius</span>
-                <div style={styles.slider}>
-                  <MySlider
-                    domain={[1, 10]}
-                    step={0.5}
-                    values={[2]}
-                    onChange={this.handleAreaChange}
-                    valuePrefix={""}
-                    valueSuffix={" km"}
-                  />
-                </div>
-              </div>
             )}
-            <div style={area ? styles.spacer : {}}>
-              <span>Random bound</span>
-              <div style={styles.slider}>
-                <MySlider
-                  domain={[-1, 1]}
-                  step={0.1}
-                  values={[-0.3, 0.3]}
-                  onChange={this.handleRandomChange}
-                  handlesNames={["Lower Bound", "Upper Bound"]}
-                />
-              </div>
+            {activePage === 1 && <SecondPage />}
+          </div>
+          <div style={styles.buttonContainer}>
+            <div style={styles.buttons}>
+              {activePage === 1 && (
+                <HoverButton
+                  outerStyle={styles.button}
+                  hoverStyle={styles.buttonHover}
+                  onClick={() => this.setPage(0)}
+                >
+                  <span>Back</span>
+                </HoverButton>
+              )}
+              <HoverButton
+                outerStyle={{marginLeft: "1em",...styles.button}}
+                hoverStyle={styles.buttonHover}
+                onClick={
+                  activePage === 1 ? this.showSimulation : () => this.setPage(1)
+                }
+              >
+                <span>{activePage === 1 ? "Run Simulation" : "Next"}</span>
+              </HoverButton>
             </div>
           </div>
-          <HoverButton
-            outerStyle={styles.button}
-            hoverStyle={styles.buttonHover}
-            onClick={this.showSimulation}
-          >
-            <span>Run Simulation</span>
-          </HoverButton>
         </div>
       </div>
     )
@@ -137,7 +122,6 @@ const styles = {
   },
   thumbStyleHover: { width: 32, height: 32 },
   containerStyle: {
-    maxWidth: "minmax(300px, 1fr)",
     display: "flex",
     flexDirection: "column",
     alignItems: "space-between",
@@ -145,7 +129,7 @@ const styles = {
     borderRadius: 6,
     margin: "10vh auto 10vh",
     transition: "all .8s",
-    width: "40%",
+    width: "50%",
     height: "80vh",
   },
   header: {
@@ -180,16 +164,8 @@ const styles = {
   buttonHover: {
     background: Constants.hoverBackground,
   },
-  label: {
-    marginTop: "0.5em",
-    display: "block",
-  },
   text: {
     marginLeft: "0.2em",
-  },
-  checkbox: {
-    width: 16,
-    height: 16,
   },
   errorStyle: {
     color: "red",
@@ -209,13 +185,14 @@ const styles = {
     cursor: "pointer",
     padding: 0,
   },
-  spacer: {
-    marginTop: 50,
+  buttonContainer: {
+    width: "100%",
+    display: "flex",
   },
-  slider: {
-    width: "95%",
+  buttons: {
     marginLeft: "auto",
-    marginRight: "auto",
+    marginRight: "0.5em",
+    display: "flex",
   },
 }
 
