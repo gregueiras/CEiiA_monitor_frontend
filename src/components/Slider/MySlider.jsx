@@ -1,11 +1,6 @@
 import React, { Component } from "react"
 import { Slider, Rail, Handles, Tracks, Ticks } from "react-compound-slider"
-import {
-  Handle,
-  Track,
-  Tick,
-  TooltipRail,
-} from "./SliderComponents" // example render components - source below
+import { Handle, Track, Tick, TooltipRail } from "./SliderComponents" // example render components - source below
 
 const sliderStyle = {
   position: "relative",
@@ -15,7 +10,15 @@ const sliderStyle = {
 
 class MySlider extends Component {
   render() {
-    const { values, step, domain, onChange } = this.props
+    const {
+      values,
+      step,
+      domain,
+      onChange,
+      valuePrefix,
+      valueSuffix,
+      handlesNames,
+    } = this.props
 
     return (
       <div>
@@ -27,16 +30,27 @@ class MySlider extends Component {
           onChange={onChange}
           values={values}
         >
-          <Rail>{railProps => <TooltipRail {...railProps} />}</Rail>
+          <Rail>
+            {railProps => (
+              <TooltipRail
+                valuePrefix={valuePrefix}
+                valueSuffix={valueSuffix}
+                {...railProps}
+                />
+                )}
+          </Rail>
           <Handles>
             {({ handles, getHandleProps }) => (
               <div className="slider-handles">
-                {handles.map(handle => (
+                {handles.map((handle, idx) => (
                   <Handle
-                    key={handle.id}
-                    handle={handle}
-                    domain={domain}
-                    getHandleProps={getHandleProps}
+                  key={handle.id}
+                  handle={handle}
+                  domain={domain}
+                  getHandleProps={getHandleProps}
+                  valuePrefix={handlesNames ? handlesNames[idx] : valuePrefix}
+                  valueSuffix={valueSuffix}
+                  onChange={onChange}
                   />
                 ))}
               </div>
@@ -60,7 +74,12 @@ class MySlider extends Component {
             {({ ticks }) => (
               <div className="slider-ticks">
                 {ticks.map(tick => (
-                  <Tick key={tick.id} tick={tick} count={ticks.length} format={(value) => value.toFixed(1)} />
+                  <Tick
+                    key={tick.id}
+                    tick={tick}
+                    count={ticks.length}
+                    format={value => value.toFixed(1)}
+                  />
                 ))}
               </div>
             )}

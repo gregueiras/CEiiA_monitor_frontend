@@ -32,13 +32,11 @@ class NewLocationModal extends Component {
   }
 
   handleAreaChange([radius]) {
-    console.log(radius)
     // Set new radius
     this.setState({ radius })
   }
 
-  handleRandomChange([ lowerBound, upperBound ]) {
-    console.log(lowerBound, upperBound)
+  handleRandomChange([lowerBound, upperBound]) {
     // Set new random limits
     this.setState({ lowerBound, upperBound })
   }
@@ -66,7 +64,11 @@ class NewLocationModal extends Component {
           <div style={{ marginRight: 10, marginLeft: 10 }}>
             <div>
               <span>Initial Position:</span>
-              <MyLocationPicker onChange={this.handleLocationChange} radius={radius} visible={area}/>
+              <MyLocationPicker
+                onChange={this.handleLocationChange}
+                radius={radius}
+                visible={area}
+              />
             </div>
             <div>
               <label style={styles.label}>
@@ -83,22 +85,29 @@ class NewLocationModal extends Component {
             {area && (
               <div>
                 <span>Area radius</span>
-                <MySlider
-                  domain={[1, 10]}
-                  step={0.5}
-                  values={[2]}
-                  onChange={this.handleAreaChange}
-                />
+                <div style={styles.slider}>
+                  <MySlider
+                    domain={[1, 10]}
+                    step={0.5}
+                    values={[2]}
+                    onChange={this.handleAreaChange}
+                    valuePrefix={""}
+                    valueSuffix={" km"}
+                  />
+                </div>
               </div>
             )}
             <div style={area ? styles.spacer : {}}>
               <span>Random bound</span>
-              <MySlider
-                domain={[-1, 1]}
-                step={0.1}
-                values={[-0.3, 0.3]}
-                onChange={this.handleRandomChange}
-              />
+              <div style={styles.slider}>
+                <MySlider
+                  domain={[-1, 1]}
+                  step={0.1}
+                  values={[-0.3, 0.3]}
+                  onChange={this.handleRandomChange}
+                  handlesNames={["Lower Bound", "Upper Bound"]}
+                />
+              </div>
             </div>
           </div>
           <HoverButton
@@ -202,6 +211,11 @@ const styles = {
   },
   spacer: {
     marginTop: 50,
+  },
+  slider: {
+    width: "95%",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 }
 

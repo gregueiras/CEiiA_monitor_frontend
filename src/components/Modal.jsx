@@ -30,39 +30,42 @@ class Modal extends Component {
   }
 
   toggleModalHandler(idx) {
-    console.log(idx)
     this.setState({
       modalShowing: idx,
     })
   }
 
   render() {
-    const { modalShowing, suggestions } = this.state
+    const { modalShowing, suggestions } = this.state //modalShowing is 0 for NewLocation, 1 for NewSimulation
     const { createMonitor } = this.props
     return (
       <div style={modalShowing ? style.backModal : {}}>
-        <NewLocationModal
-          show={{ ...style.shadow }}
-          close={() => this.toggleModalHandler(null)}
-          onSubmit={createMonitor}
-          suggestions={suggestions}
-          style={
-            modalShowing === 0
-              ? { ...style.modal, ...style.shadow }
-              : { display: "none" }
-          }
-        />
-        <NewSimulationModal
-          show={{ ...style.shadow }}
-          close={() => this.toggleModalHandler(null)}
-          onSubmit={createMonitor}
-          suggestions={suggestions}
-          style={
-            modalShowing === 1
-              ? { ...style.modal, ...style.shadow }
-              : { display: "none" }
-          }
-        />
+        {modalShowing === 0 && (
+          <NewLocationModal
+            show={{ ...style.shadow }}
+            close={() => this.toggleModalHandler(null)}
+            onSubmit={createMonitor}
+            suggestions={suggestions}
+            style={
+              modalShowing === 0
+                ? { ...style.modal, ...style.shadow }
+                : { display: "none" }
+            }
+          />
+        )}
+        {modalShowing === 1 && (
+          <NewSimulationModal
+            show={{ ...style.shadow }}
+            close={() => this.toggleModalHandler(null)}
+            onSubmit={createMonitor}
+            suggestions={suggestions}
+            style={
+              modalShowing === 1
+                ? { ...style.modal, ...style.shadow }
+                : { display: "none" }
+            }
+          />
+        )}
         <HoverButton
           animate
           outerStyle={{ ...style.modalButton }}

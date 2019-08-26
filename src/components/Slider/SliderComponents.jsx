@@ -9,7 +9,7 @@ const numberPrecision = 1
 const railOuterStyle = {
   position: "absolute",
   width: "100%",
-  height: 42,
+  height: 36,
   transform: "translate(0%, -50%)",
   borderRadius: 7,
   cursor: "pointer",
@@ -52,7 +52,13 @@ export class Handle extends Component {
   }
 
   onMouseEnter = () => {
+    const {
+      onChange,
+      handle: { value },
+    } = this.props
     this.setState({ mouseOver: true })
+
+    if (onChange) onChange([value])
   }
 
   onMouseLeave = () => {
@@ -66,6 +72,8 @@ export class Handle extends Component {
       isActive,
       disabled,
       getHandleProps,
+      valuePrefix,
+      valueSuffix,
     } = this.props
     const { mouseOver } = this.state
 
@@ -82,7 +90,7 @@ export class Handle extends Component {
           >
             <div className="tooltip">
               <span className="tooltiptext">
-                Value: {value.toFixed(numberPrecision)}
+                {valuePrefix} {value.toFixed(numberPrecision)} {valueSuffix}
               </span>
             </div>
           </div>
@@ -270,14 +278,14 @@ Tick.defaultProps = {
 // *******************************************************
 const railStyle = {
   position: "absolute",
-  width: "100%",
-  height: 40,
+  width: "90%",
+  height: 46,
   top: -13,
   borderRadius: 7,
   cursor: "pointer",
   opacity: 0.3,
   zIndex: 300,
-  border: "1px solid grey",
+  border: "0",
 }
 
 const railCenterStyle = {
@@ -298,6 +306,7 @@ export class TooltipRail extends Component {
 
   static defaultProps = {
     disabled: false,
+    onChange: null,
   }
 
   onMouseEnter = () => {
@@ -316,14 +325,18 @@ export class TooltipRail extends Component {
       this.setState({ value: null, percent: null })
     } else {
       const { value, percent } = getEventData(e)
-      console.log(value)
-      this.setState({ value: value.toFixed(numberPrecision), percent })
+      this.setState({ value, percent })
     }
   }
 
   render() {
     const { value, percent } = this.state
-    const { activeHandleID, getRailProps } = this.props
+    const {
+      activeHandleID,
+      getRailProps,
+      valuePrefix,
+      valueSuffix,
+    } = this.props
 
     return (
       <Fragment>
@@ -337,7 +350,9 @@ export class TooltipRail extends Component {
             }}
           >
             <div className="tooltip">
-              <span className="tooltiptext">Value: {value}</span>
+              <span className="tooltiptext">
+                {valuePrefix} {value.toFixed(numberPrecision)} {valueSuffix}
+              </span>
             </div>
           </div>
         ) : null}
