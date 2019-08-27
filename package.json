@@ -6,6 +6,7 @@
   "dependencies": {
     "highcharts": "^7.1.2",
     "md5": "^2.2.1",
+    "ordinal": "^1.0.3",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-compound-slider": "^2.2.0",

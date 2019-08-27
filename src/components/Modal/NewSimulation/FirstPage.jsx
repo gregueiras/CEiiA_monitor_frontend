@@ -25,7 +25,7 @@ export default class FirstPage extends Component {
     return (
       <div style={{ marginRight: 10, marginLeft: 10 }}>
         <div>
-          <span>Initial Position:</span>
+          <span>Initial Position</span>
           <MyLocationPicker
             onChange={handleLocationChange}
             radius={radius}
@@ -45,8 +45,8 @@ export default class FirstPage extends Component {
           </label>
         </div>
         {area && (
-          <div>
-            <span>Area radius</span>
+          <div style={area ? styles.smallSpacer : {}}
+            ><span>Area radius</span>
             <div style={styles.slider}>
               <MySlider
                 domain={[1, 10]}
@@ -79,6 +79,9 @@ export default class FirstPage extends Component {
 const styles = {
   spacer: {
     marginTop: 50,
+  },
+  smallSpacer: {
+    marginTop: 10,
   },
   slider: {
     width: "95%",

@@ -18,6 +18,8 @@ class MySlider extends Component {
       valuePrefix,
       valueSuffix,
       handlesNames,
+      numberPrecision,
+      disabled,
     } = this.props
 
     return (
@@ -29,28 +31,33 @@ class MySlider extends Component {
           rootStyle={sliderStyle}
           onChange={onChange}
           values={values}
+          disabled={disabled}
         >
           <Rail>
             {railProps => (
               <TooltipRail
                 valuePrefix={valuePrefix}
                 valueSuffix={valueSuffix}
+                numberPrecision={numberPrecision}
+                disabled={disabled}
                 {...railProps}
-                />
-                )}
+              />
+            )}
           </Rail>
           <Handles>
             {({ handles, getHandleProps }) => (
               <div className="slider-handles">
                 {handles.map((handle, idx) => (
                   <Handle
-                  key={handle.id}
-                  handle={handle}
-                  domain={domain}
-                  getHandleProps={getHandleProps}
-                  valuePrefix={handlesNames ? handlesNames[idx] : valuePrefix}
-                  valueSuffix={valueSuffix}
-                  onChange={onChange}
+                    key={handle.id}
+                    handle={handle}
+                    domain={domain}
+                    getHandleProps={getHandleProps}
+                    valuePrefix={handlesNames ? handlesNames[idx] : valuePrefix}
+                    valueSuffix={valueSuffix}
+                    onChange={onChange}
+                    disabled={disabled}
+                    numberPrecision={numberPrecision}
                   />
                 ))}
               </div>
@@ -64,6 +71,7 @@ class MySlider extends Component {
                     key={id}
                     source={source}
                     target={target}
+                    disabled={disabled}
                     getTrackProps={getTrackProps}
                   />
                 ))}
@@ -77,6 +85,7 @@ class MySlider extends Component {
                   <Tick
                     key={tick.id}
                     tick={tick}
+                    disabled={disabled}
                     count={ticks.length}
                     format={value => value.toFixed(1)}
                   />

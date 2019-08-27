@@ -5,11 +5,11 @@ import { GoX } from "react-icons/go"
 import FirstPage from "./NewSimulation/FirstPage"
 import SecondPage from "./NewSimulation/SecondPage"
 
-class NewLocationModal extends Component {
+class NewSimulationModal extends Component {
   state = {
     area: true,
     radius: 2,
-    activePage: 0,
+    activePage: 1,
   }
 
   constructor(props) {
@@ -92,7 +92,7 @@ class NewLocationModal extends Component {
                 </HoverButton>
               )}
               <HoverButton
-                outerStyle={{marginLeft: "1em",...styles.button}}
+                outerStyle={{ marginLeft: "1em", ...styles.button }}
                 hoverStyle={styles.buttonHover}
                 onClick={
                   activePage === 1 ? this.showSimulation : () => this.setPage(1)
@@ -196,4 +196,4 @@ const styles = {
   },
 }
 
-export default NewLocationModal
+export default NewSimulationModal

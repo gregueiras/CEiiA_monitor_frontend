@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import PropTypes from "prop-types"
 import "./tooltip.css"
-const numberPrecision = 1
+const defaultNumberPrecision = 1
 
 // *******************************************************
 // RAIL
@@ -74,6 +74,7 @@ export class Handle extends Component {
       getHandleProps,
       valuePrefix,
       valueSuffix,
+      numberPrecision,
     } = this.props
     const { mouseOver } = this.state
 
@@ -90,7 +91,11 @@ export class Handle extends Component {
           >
             <div className="tooltip">
               <span className="tooltiptext">
-                {valuePrefix} {value.toFixed(numberPrecision)} {valueSuffix}
+                {valuePrefix}{" "}
+                {value.toFixed(
+                  numberPrecision ? numberPrecision : defaultNumberPrecision
+                )}{" "}
+                {valueSuffix}
               </span>
             </div>
           </div>
@@ -336,6 +341,7 @@ export class TooltipRail extends Component {
       getRailProps,
       valuePrefix,
       valueSuffix,
+      numberPrecision
     } = this.props
 
     return (
@@ -351,7 +357,7 @@ export class TooltipRail extends Component {
           >
             <div className="tooltip">
               <span className="tooltiptext">
-                {valuePrefix} {value.toFixed(numberPrecision)} {valueSuffix}
+                {valuePrefix} {value.toFixed(numberPrecision ? numberPrecision : defaultNumberPrecision)} {valueSuffix}
               </span>
             </div>
           </div>
