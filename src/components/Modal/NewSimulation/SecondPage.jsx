@@ -1,8 +1,10 @@
 import React, { Component } from "react"
-import { GoX } from "react-icons/go"
+import { GoX, GoPlus } from "react-icons/go"
 import ordinal from "ordinal"
 import Constants from "style/Constants"
 import MySlider from "components/Slider/MySlider"
+import HoverButton from "components/Buttons/HoverButton"
+
 export default class SecondPage extends Component {
   static options = [
     { value: "days", label: "Days" },
@@ -10,15 +12,17 @@ export default class SecondPage extends Component {
     { value: "minutes", label: "Minutes" },
   ]
 
+  static defaultLeg = { engine: true, turn: 0, velocity: 0, time: 1 }
+
   state = {
     error: null,
     legs: [
-      { engine: true, turn: 0, velocity: 0, time: 1 },
-      { engine: true, turn: 0, velocity: 0, time: 1 },
-      { engine: true, turn: 0, velocity: 0, time: 1 },
-      { engine: true, turn: 0, velocity: 0, time: 1 },
-      { engine: true, turn: 0, velocity: 0, time: 1 },
-      { engine: true, turn: 0, velocity: 0, time: 1 },
+      SecondPage.defaultLeg,
+      SecondPage.defaultLeg,
+      SecondPage.defaultLeg,
+      SecondPage.defaultLeg,
+      SecondPage.defaultLeg,
+      SecondPage.defaultLeg,
     ],
   }
 
@@ -64,12 +68,27 @@ export default class SecondPage extends Component {
     this.setState({ legs })
   }
 
+  addLeg = () => {
+    const { legs } = this.state
+    const newLeg = SecondPage.defaultLeg
+  
+    console.log(newLeg)
+
+    this.setState({ legs: [...legs, newLeg] })
+  }
+
   render() {
     const { legs } = this.state
 
     return (
       <div>
-        <div style={styles.grid}>
+        <div
+          style={{
+            ...styles.grid,
+            gridTemplateColumns: `repeat(${legs.length + // +2 to give space for add element and final spacer
+              2}, minmax(200px, 1fr))`,
+          }}
+        >
           {legs.map(({ engine, time, turn, velocity }, idx) => {
             return (
               <div style={styles.inputGroup} key={idx}>
@@ -123,7 +142,12 @@ export default class SecondPage extends Component {
                     style={{
                       ...styles.inputLine,
                       flexDirection: "column",
-                      ...{ color: (turn === 0 || !engine) ? Constants.disabledColor : "auto" },
+                      ...{
+                        color:
+                          turn === 0 || !engine
+                            ? Constants.disabledColor
+                            : "auto",
+                      },
                     }}
                   >
                     <label>Velocity (m/s)</label>
@@ -145,7 +169,16 @@ export default class SecondPage extends Component {
               </div>
             )
           })}
-          <div style={{ ...styles.inputGroup, marginRight: 500 }}></div>
+          <div style={{ ...styles.inputGroup }}>
+            <HoverButton
+              outerStyle={styles.button}
+              hoverStyle={styles.buttonHover}
+              onClick={this.addLeg}
+            >
+              <GoPlus size={28} />
+            </HoverButton>
+          </div>
+          <div style={{ width: "5px", height: "5px" }}></div>
         </div>
       </div>
     )
@@ -180,7 +213,6 @@ const styles = {
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(60, minmax(200px, 1fr))",
     gridGap: "minmax(150px, 1fr)",
     paddingBottom: 10,
     overflowX: "auto",
@@ -223,5 +255,21 @@ const styles = {
     paddingTop: "1em",
     border: "1px solid grey",
     height: "100%",
+  },
+  button: {
+    width: 50,
+    height: 50,
+    padding: 10,
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: "auto",
+    border: 0,
+    borderRadius: "50%",
+    background: Constants.lightBackground,
+    color: "white",
+    cursor: "pointer",
+  },
+  buttonHover: {
+    background: Constants.hoverBackground,
   },
 }
