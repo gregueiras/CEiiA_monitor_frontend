@@ -117,7 +117,7 @@ export class Handle extends Component {
             border: 0,
             borderRadius: "50%",
             boxShadow: "1px 1px 1px 1px rgba(0, 0, 0, 0.4)",
-            backgroundColor: disabled ? "#666" : "#ea4335",
+            backgroundColor: disabled ? "#858583" : "#ea4335",
           }}
           {...getHandleProps(id, {
             onMouseEnter: this.onMouseEnter,
@@ -341,7 +341,7 @@ export class TooltipRail extends Component {
       getRailProps,
       valuePrefix,
       valueSuffix,
-      numberPrecision
+      numberPrecision,
     } = this.props
 
     return (
@@ -357,7 +357,11 @@ export class TooltipRail extends Component {
           >
             <div className="tooltip">
               <span className="tooltiptext">
-                {valuePrefix} {value.toFixed(numberPrecision ? numberPrecision : defaultNumberPrecision)} {valueSuffix}
+                {valuePrefix}{" "}
+                {value.toFixed(
+                  numberPrecision ? numberPrecision : defaultNumberPrecision
+                )}{" "}
+                {valueSuffix}
               </span>
             </div>
           </div>

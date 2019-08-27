@@ -9,6 +9,7 @@ const Constants = {
   cellWidth: "auto",
   textAlign: "center",
   maxWidth: "300px",
+  disabledColor: "#858583",
 }
 
 export default Constants

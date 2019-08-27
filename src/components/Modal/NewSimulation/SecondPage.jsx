@@ -104,7 +104,11 @@ export default class SecondPage extends Component {
                     />
                   </div>
                   <div style={styles.inputLine}>
-                    <label>Turn (degrees)</label>
+                    <label
+                      style={!engine ? { color: Constants.disabledColor } : {}}
+                    >
+                      Turn (degrees)
+                    </label>
                     <input
                       type="number"
                       style={styles.inputNumber}
@@ -115,7 +119,13 @@ export default class SecondPage extends Component {
                       disabled={!engine}
                     />
                   </div>
-                  <div style={{ ...styles.inputLine, flexDirection: "column" }}>
+                  <div
+                    style={{
+                      ...styles.inputLine,
+                      flexDirection: "column",
+                      ...{ color: (turn === 0 || !engine) ? Constants.disabledColor : "auto" },
+                    }}
+                  >
                     <label>Velocity (m/s)</label>
                     <div style={styles.slider}>
                       <MySlider
@@ -135,7 +145,7 @@ export default class SecondPage extends Component {
               </div>
             )
           })}
-          <div style={{...styles.inputGroup, marginRight: 500}}></div>
+          <div style={{ ...styles.inputGroup, marginRight: 500 }}></div>
         </div>
       </div>
     )
