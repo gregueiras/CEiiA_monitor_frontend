@@ -4,6 +4,7 @@ import HoverButton from "components/Buttons/HoverButton"
 import { GoX } from "react-icons/go"
 import FirstPage from "./NewSimulation/FirstPage"
 import SecondPage from "./NewSimulation/SecondPage"
+import encodeForAjax from "api/util"
 
 class NewSimulationModal extends Component {
   static defaultLeg = { engine: true, turn: 0, velocity: 0, time: 1 }
@@ -13,10 +14,15 @@ class NewSimulationModal extends Component {
     radius: 2,
     activePage: 1,
     legs: [
-      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
-      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
-      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
+      { engine: false, turn: 0, velocity: 0, time: 6 },
+      { engine: true, turn: 30, velocity: 2, time: 0.75 },
+      { engine: true, turn: 0, velocity: 2, time: 5 },
     ],
+    lowerBound: -0.3,
+    upperBound: 0.3,
+    longitude: -9.504377,
+    latitude: 40.765354,
+    address: "Portugal",
   }
 
   toggleAreaUpdate = () => {
@@ -27,8 +33,11 @@ class NewSimulationModal extends Component {
   }
 
   handleLocationChange = ({ position, address }) => {
+    console.log(position)
+    console.log(address)
+    const { lat: latitude, lng: longitude } = position
     // Set new location
-    this.setState({ position, address })
+    this.setState({ latitude, longitude, address })
   }
 
   handleAreaChange = ([radius]) => {
@@ -55,7 +64,10 @@ class NewSimulationModal extends Component {
 
   handleEngineChange = idx => {
     const { legs } = this.state
-    legs[idx].engine = !legs[idx].engine
+
+    const { engine, time } = legs[idx]
+    legs[idx].engine = !engine
+    legs[idx].time = engine ? time / 60 : time * 60
 
     this.setState({ legs })
   }
@@ -93,17 +105,81 @@ class NewSimulationModal extends Component {
     this.setState({ legs: [...legs, newLeg] })
   }
 
-  showSimulation = () => {
-    const driftingTimeStep = 0.0625
-    const engineTurnTimeStep = (1 / (24 * 60 * 12))
-    const engineStraightTimeStep = (1 / (24 * 60))
-    
-    const turnDegree = Math.PI/6
+  showSimulation = async () => {
+    const driftingTimeStep = 0.0625 //1.5 hours
+    const engineTurnTimeStep = 1 / (24 * 60 * 12) // 5 seconds
+    const engineStraightTimeStep = 1 / (24 * 60) // 1 minute
 
+    const turnDegree = Math.PI / 6 // 30 degrees
+
+    const {
+      legs,
+      area,
+      radius,
+      lowerBound,
+      upperBound,
+      latitude,
+      longitude,
+    } = this.state
+
+    const timeSteps = [driftingTimeStep / 90]
+    const timeJumps = [1]
+    const turns = []
+    const velocities = []
+
+    //time is in minutes if engine, hours otherwise
+    legs.forEach(({ engine, turn, velocity, time }) => {
+      let jump = null
+      let timeDays = time / 24
+
+      if (engine) {
+        timeDays /= 60
+        if (turn === 0) {
+          jump = engineStraightTimeStep
+        } else {
+          jump = engineTurnTimeStep
+        }
+      } else {
+        jump = driftingTimeStep
+      }
+
+      timeJumps.push(jump)
+      timeSteps.push(Math.round(timeDays / jump))
+
+      turns.push(turn)
+      velocities.push(velocity)
+    })
+
+    const url = new URL(`${process.env.REACT_APP_BACKEND_API}/simulation?`)
+    const params = {
+      time_jumps: timeJumps,
+      time_steps: timeSteps,
+      turns,
+      velocity: velocities,
+      area,
+      radius,
+      randomLowerBound: lowerBound,
+      randomUpperBound: upperBound,
+      latitude,
+      longitude,
+      reCalc: true,
+    }
+
+    let request = new XMLHttpRequest()
+    request.open("get", url + encodeForAjax(params), true)
+    request.send()
+
+    request.onreadystatechange = evt => {
+      if (request.readyState === 4) {
+        if (request.status === 200) {
+          console.log(JSON.parse(request.responseText))
+        } else console.log("ERROR STATUS")
+      }
+    }
   }
 
   render() {
-    const { area, radius, activePage, legs } = this.state
+    const { area, radius, activePage, legs, latitude, longitude } = this.state
     const { style, close, show } = this.props
 
     return (
@@ -131,6 +207,7 @@ class NewSimulationModal extends Component {
                 toggleAreaUpdate={this.toggleAreaUpdate}
                 handleAreaChange={this.handleAreaChange}
                 handleRandomChange={this.handleRandomChange}
+                defaultPosition={{ lat: latitude, lng: longitude }}
               />
             )}
             {activePage === 1 && (

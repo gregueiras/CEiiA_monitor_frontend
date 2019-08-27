@@ -6,9 +6,16 @@ import MySlider from "components/Slider/MySlider"
 import HoverButton from "components/Buttons/HoverButton"
 
 export default class SecondPage extends Component {
-
   render() {
-    const { legs, handleEngineChange, handleTimeChange, handleTurnChange, handleVelocityChange, removeLeg, addLeg} = this.props
+    const {
+      legs,
+      handleEngineChange,
+      handleTimeChange,
+      handleTurnChange,
+      handleVelocityChange,
+      removeLeg,
+      addLeg,
+    } = this.props
 
     return (
       <div>
@@ -33,7 +40,9 @@ export default class SecondPage extends Component {
                 </div>
                 <div style={styles.container}>
                   <div style={styles.inputLine}>
-                    <label>Maneuver Time (hours)</label>
+                    <label>
+                      Maneuver Time ({engine ? "minutes" : "hours"})
+                    </label>
                     <input
                       type="number"
                       min="0"
@@ -139,7 +148,7 @@ const styles = {
     background: "#F5F5F0",
   },
   inputNumber: {
-    width: "25%",
+    width: "30%",
   },
   grid: {
     display: "grid",
@@ -153,6 +162,7 @@ const styles = {
     marginLeft: "0.5em",
     marginRight: "0.5em",
     marginBottom: "1em",
+    fontSize: 14,
   },
   header: {
     background: Constants.lightBackground,

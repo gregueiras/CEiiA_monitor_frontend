@@ -1,27 +1,9 @@
 import React, { Component } from "react"
 import LocationPicker from "react-location-picker"
 
-/* Default position */
-const defaultPosition = {
-  lat: 32.6729618,
-  lng: -16.688149,
-}
-
 class MyLocationPicker extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      position: {
-        lat: 0,
-        lng: 0,
-      },
-    }
-
-    // Bind
-  }
   render() {
-    const { onChange, radius, visible } = this.props
+    const { onChange, radius, visible, defaultPosition } = this.props
     return (
       <div>
         <div>

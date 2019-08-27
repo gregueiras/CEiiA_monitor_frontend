@@ -20,13 +20,16 @@ export default class FirstPage extends Component {
       toggleAreaUpdate,
       handleAreaChange,
       handleRandomChange,
+      address,
+      defaultPosition,
     } = this.props
 
     return (
       <div style={{ marginRight: 10, marginLeft: 10 }}>
         <div>
-          <span>Initial Position</span>
+          <span>Initial Position: {address}</span>
           <MyLocationPicker
+            defaultPosition={defaultPosition}
             onChange={handleLocationChange}
             radius={radius}
             visible={area}
@@ -45,8 +48,8 @@ export default class FirstPage extends Component {
           </label>
         </div>
         {area && (
-          <div style={area ? styles.smallSpacer : {}}
-            ><span>Area radius</span>
+          <div style={area ? styles.smallSpacer : {}}>
+            <span>Area radius</span>
             <div style={styles.slider}>
               <MySlider
                 domain={[1, 10]}
