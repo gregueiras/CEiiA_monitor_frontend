@@ -54,7 +54,6 @@ class NewSimulationModal extends Component {
   }
 
   handleEngineChange = idx => {
-    console.log(idx)
     const { legs } = this.state
     legs[idx].engine = !legs[idx].engine
 
@@ -66,7 +65,7 @@ class NewSimulationModal extends Component {
     const { legs } = this.state
     legs[idx].turn = turn
 
-    if (turn === 0) {
+    if (turn !== 0) {
       legs[idx].velocity = 2
     }
 
@@ -92,6 +91,15 @@ class NewSimulationModal extends Component {
     const newLeg = JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg))
 
     this.setState({ legs: [...legs, newLeg] })
+  }
+
+  showSimulation = () => {
+    const driftingTimeStep = 0.0625
+    const engineTurnTimeStep = (1 / (24 * 60 * 12))
+    const engineStraightTimeStep = (1 / (24 * 60))
+    
+    const turnDegree = Math.PI/6
+
   }
 
   render() {

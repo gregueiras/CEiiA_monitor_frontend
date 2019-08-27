@@ -74,7 +74,7 @@ export default class SecondPage extends Component {
                       flexDirection: "column",
                       ...{
                         color:
-                          turn === 0 || !engine
+                          turn !== 0 || !engine
                             ? Constants.disabledColor
                             : "inherit",
                       },
@@ -91,7 +91,7 @@ export default class SecondPage extends Component {
                         valueSuffix={" m/s"}
                         handlesNames={[]}
                         numberPrecision={2}
-                        disabled={turn === 0 || !engine}
+                        disabled={turn !== 0 || !engine}
                       />
                     </div>
                   </div>
