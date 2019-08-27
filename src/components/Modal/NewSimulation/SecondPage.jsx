@@ -6,79 +6,9 @@ import MySlider from "components/Slider/MySlider"
 import HoverButton from "components/Buttons/HoverButton"
 
 export default class SecondPage extends Component {
-  static options = [
-    { value: "days", label: "Days" },
-    { value: "hours", label: "Hours" },
-    { value: "minutes", label: "Minutes" },
-  ]
-
-  static defaultLeg = { engine: true, turn: 0, velocity: 0, time: 1 }
-
-  state = {
-    error: null,
-    legs: [
-      SecondPage.defaultLeg,
-      SecondPage.defaultLeg,
-      SecondPage.defaultLeg,
-      SecondPage.defaultLeg,
-      SecondPage.defaultLeg,
-      SecondPage.defaultLeg,
-    ],
-  }
-
-  handleTimeChange = (selectedTime, idx) => {
-    const time = selectedTime.target.value
-    const { legs } = this.state
-    legs[idx].time = time
-
-    this.setState({ legs })
-  }
-
-  handleEngineChange = idx => {
-    console.log(idx)
-    const { legs } = this.state
-    legs[idx].engine = !legs[idx].engine
-
-    this.setState({ legs })
-  }
-
-  handleTurnChange = (selectedTurn, idx) => {
-    const turn = Number(selectedTurn.target.value)
-    const { legs } = this.state
-    legs[idx].turn = turn
-
-    if (turn === 0) {
-      legs[idx].velocity = 2
-    }
-
-    this.setState({ legs })
-  }
-
-  handleVelocityChange = ([velocity], idx) => {
-    const { legs } = this.state
-    legs[idx].velocity = velocity
-
-    this.setState({ legs })
-  }
-
-  removeLeg = idx => {
-    const { legs } = this.state
-    legs.splice(idx, 1)
-
-    this.setState({ legs })
-  }
-
-  addLeg = () => {
-    const { legs } = this.state
-    const newLeg = SecondPage.defaultLeg
-  
-    console.log(newLeg)
-
-    this.setState({ legs: [...legs, newLeg] })
-  }
 
   render() {
-    const { legs } = this.state
+    const { legs, handleEngineChange, handleTimeChange, handleTurnChange, handleVelocityChange, removeLeg, addLeg} = this.props
 
     return (
       <div>
@@ -96,7 +26,7 @@ export default class SecondPage extends Component {
                   <span style={styles.headerText}>{ordinal(idx + 1)} Leg</span>
                   <button
                     style={styles.buttonStyle}
-                    onClick={() => this.removeLeg(idx)}
+                    onClick={() => removeLeg(idx)}
                   >
                     <GoX style={styles.crossStyle} />
                   </button>
@@ -109,7 +39,7 @@ export default class SecondPage extends Component {
                       min="0"
                       max="99"
                       style={styles.inputNumber}
-                      onChange={val => this.handleTimeChange(val, idx)}
+                      onChange={val => handleTimeChange(val, idx)}
                       value={time}
                     />
                   </div>
@@ -119,7 +49,7 @@ export default class SecondPage extends Component {
                       type="checkbox"
                       style={styles.checkbox}
                       checked={engine}
-                      onChange={() => this.handleEngineChange(idx)}
+                      onChange={() => handleEngineChange(idx)}
                     />
                   </div>
                   <div style={styles.inputLine}>
@@ -133,7 +63,7 @@ export default class SecondPage extends Component {
                       style={styles.inputNumber}
                       min="-180"
                       max="180"
-                      onChange={val => this.handleTurnChange(val, idx)}
+                      onChange={val => handleTurnChange(val, idx)}
                       value={turn}
                       disabled={!engine}
                     />
@@ -146,7 +76,7 @@ export default class SecondPage extends Component {
                         color:
                           turn === 0 || !engine
                             ? Constants.disabledColor
-                            : "auto",
+                            : "inherit",
                       },
                     }}
                   >
@@ -156,7 +86,7 @@ export default class SecondPage extends Component {
                         values={[engine ? velocity : 0]}
                         step={0.05}
                         domain={[0, 2]}
-                        onChange={val => this.handleVelocityChange(val, idx)}
+                        onChange={val => handleVelocityChange(val, idx)}
                         valuePrefix={""}
                         valueSuffix={" m/s"}
                         handlesNames={[]}
@@ -173,7 +103,7 @@ export default class SecondPage extends Component {
             <HoverButton
               outerStyle={styles.button}
               hoverStyle={styles.buttonHover}
-              onClick={this.addLeg}
+              onClick={addLeg}
             >
               <GoPlus size={28} />
             </HoverButton>

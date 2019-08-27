@@ -6,49 +6,96 @@ import FirstPage from "./NewSimulation/FirstPage"
 import SecondPage from "./NewSimulation/SecondPage"
 
 class NewSimulationModal extends Component {
+  static defaultLeg = { engine: true, turn: 0, velocity: 0, time: 1 }
+
   state = {
     area: true,
     radius: 2,
     activePage: 1,
+    legs: [
+      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
+      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
+      JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg)),
+    ],
   }
 
-  constructor(props) {
-    super(props)
-    this.toggleAreaUpdate = this.toggleAreaUpdate.bind(this)
-    this.handleLocationChange = this.handleLocationChange.bind(this)
-    this.handleAreaChange = this.handleAreaChange.bind(this)
-    this.handleRandomChange = this.handleRandomChange.bind(this)
-    this.setPage = this.setPage.bind(this)
-  }
-
-  toggleAreaUpdate() {
+  toggleAreaUpdate = () => {
     const { area } = this.state
     this.setState({
       area: !area,
     })
   }
 
-  handleLocationChange({ position, address }) {
+  handleLocationChange = ({ position, address }) => {
     // Set new location
     this.setState({ position, address })
   }
 
-  handleAreaChange([radius]) {
+  handleAreaChange = ([radius]) => {
     // Set new radius
     this.setState({ radius })
   }
 
-  handleRandomChange([lowerBound, upperBound]) {
+  handleRandomChange = ([lowerBound, upperBound]) => {
     // Set new random limits
     this.setState({ lowerBound, upperBound })
   }
 
-  setPage(activePage) {
+  setPage = activePage => {
     this.setState({ activePage })
   }
 
+  handleTimeChange = (selectedTime, idx) => {
+    const time = selectedTime.target.value
+    const { legs } = this.state
+    legs[idx].time = time
+
+    this.setState({ legs })
+  }
+
+  handleEngineChange = idx => {
+    console.log(idx)
+    const { legs } = this.state
+    legs[idx].engine = !legs[idx].engine
+
+    this.setState({ legs })
+  }
+
+  handleTurnChange = (selectedTurn, idx) => {
+    const turn = Number(selectedTurn.target.value)
+    const { legs } = this.state
+    legs[idx].turn = turn
+
+    if (turn === 0) {
+      legs[idx].velocity = 2
+    }
+
+    this.setState({ legs })
+  }
+
+  handleVelocityChange = ([velocity], idx) => {
+    const { legs } = this.state
+    legs[idx].velocity = velocity
+
+    this.setState({ legs })
+  }
+
+  removeLeg = idx => {
+    const { legs } = this.state
+    legs.splice(idx, 1)
+
+    this.setState({ legs })
+  }
+
+  addLeg = () => {
+    const { legs } = this.state
+    const newLeg = JSON.parse(JSON.stringify(NewSimulationModal.defaultLeg))
+
+    this.setState({ legs: [...legs, newLeg] })
+  }
+
   render() {
-    const { area, radius, activePage } = this.state
+    const { area, radius, activePage, legs } = this.state
     const { style, close, show } = this.props
 
     return (
@@ -78,7 +125,17 @@ class NewSimulationModal extends Component {
                 handleRandomChange={this.handleRandomChange}
               />
             )}
-            {activePage === 1 && <SecondPage />}
+            {activePage === 1 && (
+              <SecondPage
+                handleTimeChange={this.handleTimeChange}
+                handleEngineChange={this.handleEngineChange}
+                handleTurnChange={this.handleTurnChange}
+                handleVelocityChange={this.handleVelocityChange}
+                removeLeg={this.removeLeg}
+                addLeg={this.addLeg}
+                legs={legs}
+              />
+            )}
           </div>
           <div style={styles.buttonContainer}>
             <div style={styles.buttons}>
