@@ -4,6 +4,7 @@ import HoverButton from "components/Buttons/HoverButton"
 import { GoX } from "react-icons/go"
 import FirstPage from "./NewSimulation/FirstPage"
 import SecondPage from "./NewSimulation/SecondPage"
+import SimulationResult from "./NewSimulation/SimulationResult"
 import encodeForAjax from "api/util"
 
 class NewSimulationModal extends Component {
@@ -12,7 +13,7 @@ class NewSimulationModal extends Component {
   state = {
     area: true,
     radius: 2,
-    activePage: 1,
+    activePage: 0,
     legs: [
       { engine: false, turn: 0, velocity: 0, time: 6 },
       { engine: true, turn: 30, velocity: 2, time: 0.75 },
@@ -20,9 +21,12 @@ class NewSimulationModal extends Component {
     ],
     lowerBound: -0.3,
     upperBound: 0.3,
-    longitude: -8.723700,
+    longitude: -8.7237,
     latitude: 41.161593,
     address: "Portugal",
+    title: "Create new Simulation",
+    simulationResult: null,
+    simulationDone: false,
   }
 
   toggleAreaUpdate = () => {
@@ -52,6 +56,14 @@ class NewSimulationModal extends Component {
 
   setPage = activePage => {
     this.setState({ activePage })
+  }
+
+  setTitle = title => {
+    this.setState({ title })
+  }
+
+  setSimulationResult = simulationResult => {
+    this.setState({ simulationResult })
   }
 
   handleTimeChange = (selectedTime, idx) => {
@@ -106,7 +118,12 @@ class NewSimulationModal extends Component {
   }
 
   showSimulation = async () => {
-    function toRadians(n) {return n * (Math.PI / 180)}
+    function toRadians(n) {
+      return n * (Math.PI / 180)
+    }
+
+    this.setPage(2)
+    this.setTitle("Loading")
 
     const driftingTimeStep = 0.0625 //1.5 hours
     const engineTurnTimeStep = 1 / (24 * 60 * 12) // 5 seconds
@@ -150,13 +167,11 @@ class NewSimulationModal extends Component {
 
       for (let iter = 0; iter < repeat; iter++) {
         timeJumps.push(jump)
-        timeSteps.push(Math.round(timeDays / jump)/repeat)
+        timeSteps.push(Math.round(timeDays / jump) / repeat)
 
         turns.push(toRadians(turn))
         velocities.push(velocity)
-        
       }
-      
     })
 
     const url = new URL(`${process.env.REACT_APP_BACKEND_API}/simulation?`)
@@ -181,14 +196,29 @@ class NewSimulationModal extends Component {
     request.onreadystatechange = evt => {
       if (request.readyState === 4) {
         if (request.status === 200) {
-          console.log(JSON.parse(request.responseText))
+          const response = JSON.parse(request.responseText)
+          console.log(response)
+
+          this.setSimulationResult(response)
+          this.setTitle("Simulation Results")
+          this.setState({ simulationDone: true })
         } else console.log("ERROR STATUS")
       }
     }
   }
 
   render() {
-    const { area, radius, activePage, legs, latitude, longitude } = this.state
+    const {
+      area,
+      radius,
+      activePage,
+      legs,
+      latitude,
+      longitude,
+      title,
+      simulationResult,
+      simulationDone,
+    } = this.state
     const { style, close, show } = this.props
 
     return (
@@ -202,7 +232,7 @@ class NewSimulationModal extends Component {
           }}
         >
           <div style={styles.header}>
-            <span style={styles.headerText}>Create new simulation</span>
+            <span style={styles.headerText}>{title}</span>
             <button style={styles.buttonStyle} onClick={close}>
               <GoX style={styles.crossStyle} />
             </button>
@@ -230,29 +260,39 @@ class NewSimulationModal extends Component {
                 legs={legs}
               />
             )}
+            {activePage === 2 && (
+              <SimulationResult
+                simulationResult={simulationResult}
+                simulationDone={simulationDone}
+              />
+            )}
           </div>
-          <div style={styles.buttonContainer}>
-            <div style={styles.buttons}>
-              {activePage === 1 && (
+          {activePage < 2 && (
+            <div style={styles.buttonContainer}>
+              <div style={styles.buttons}>
+                {activePage === 1 && (
+                  <HoverButton
+                    outerStyle={styles.button}
+                    hoverStyle={styles.buttonHover}
+                    onClick={() => this.setPage(0)}
+                  >
+                    <span>Back</span>
+                  </HoverButton>
+                )}
                 <HoverButton
-                  outerStyle={styles.button}
+                  outerStyle={{ marginLeft: "1em", ...styles.button }}
                   hoverStyle={styles.buttonHover}
-                  onClick={() => this.setPage(0)}
+                  onClick={
+                    activePage === 1
+                      ? this.showSimulation
+                      : () => this.setPage(1)
+                  }
                 >
-                  <span>Back</span>
+                  <span>{activePage === 1 ? "Run Simulation" : "Next"}</span>
                 </HoverButton>
-              )}
-              <HoverButton
-                outerStyle={{ marginLeft: "1em", ...styles.button }}
-                hoverStyle={styles.buttonHover}
-                onClick={
-                  activePage === 1 ? this.showSimulation : () => this.setPage(1)
-                }
-              >
-                <span>{activePage === 1 ? "Run Simulation" : "Next"}</span>
-              </HoverButton>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     )

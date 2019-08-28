@@ -61,7 +61,7 @@ class App extends Component {
     const { monitors } = this.state
     return (
       <div>
-        <Modal createMonitor={this.createMonitor} modalShowing={1} />
+        <Modal createMonitor={this.createMonitor}/>
         <MyGrid monitors={monitors || []} removeMonitor={this.removeMonitor} />
       </div>
     )
