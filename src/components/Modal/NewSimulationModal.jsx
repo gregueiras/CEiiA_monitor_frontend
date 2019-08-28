@@ -20,8 +20,8 @@ class NewSimulationModal extends Component {
     ],
     lowerBound: -0.3,
     upperBound: 0.3,
-    longitude: -9.504377,
-    latitude: 40.765354,
+    longitude: -8.723700,
+    latitude: 41.161593,
     address: "Portugal",
   }
 
@@ -122,8 +122,8 @@ class NewSimulationModal extends Component {
       longitude,
     } = this.state
 
-    const timeSteps = [driftingTimeStep / 90]
-    const timeJumps = [1]
+    const timeJumps = [driftingTimeStep / 90]
+    const timeSteps = [1]
     const turns = []
     const velocities = []
 
