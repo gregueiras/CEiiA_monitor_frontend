@@ -60,6 +60,7 @@ class App extends Component {
   componentDidMount() {
     this._isMounted = true
     if (this.props.liveUpdate) {
+      console.log(this.props.data)
       this.handleStartLiveUpdate()
     }
   }
@@ -101,7 +102,6 @@ class App extends Component {
 
           let newData = data.slice(eraseOldest ? 1 : 0) // 0 to Add, 1 to Delete Oldest Record
           newData = [...newData, newPoint]
-          console.log(newData)
 
           return newData
         }
@@ -128,7 +128,6 @@ class App extends Component {
 
     if (this._isMounted) {
       const { data } = this.state
-      console.log(data.length)
       const newData = data.map(({ name, data: buoyData }) => {
         if (name === buoyID) {
           buoyData = addDataPoint(buoyData, false)
@@ -176,19 +175,19 @@ class App extends Component {
 
     return (
       <div className="app" style={{ ...style, position: "relative" }}>
-          <span data-tip data-for='liveUpdate'
-            style={{
-              ...liveUpdateStyle,
-              backgroundColor: `rgb(${
-                liveUpdate ? "72, 173, 72" : "234, 67, 53"
-              })`,
-            }}
-            ></span>
-        <ReactTooltip id='liveUpdate'>
-          <span>
-            Live Update {liveUpdate ? "On" : "Off"}
-          </span>
-          </ReactTooltip>
+        <span
+          data-tip
+          data-for="liveUpdate"
+          style={{
+            ...liveUpdateStyle,
+            backgroundColor: `rgb(${
+              liveUpdate ? "72, 173, 72" : "234, 67, 53"
+            })`,
+          }}
+        ></span>
+        <ReactTooltip id="liveUpdate">
+          <span>Live Update {liveUpdate ? "On" : "Off"}</span>
+        </ReactTooltip>
         <HighchartsChart oneToOne={true} styledMode>
           <Chart zoomType="x" type="datetime" />
           <Title>{title}</Title>
@@ -202,9 +201,10 @@ class App extends Component {
 
           <YAxis>
             <YAxis.Title>{yTitle}</YAxis.Title>
-            {data.map(({ name, data: dataBuoy }, index) => (
-              <LineSeries data={dataBuoy} key={index} name={name} />
-            ))}
+            {data.map(({ name, data: dataBuoy }, index) => {
+              console.log(dataBuoy.length, name)
+              return <LineSeries data={dataBuoy} key={index} name={name} />
+            })}
           </YAxis>
         </HighchartsChart>
       </div>
