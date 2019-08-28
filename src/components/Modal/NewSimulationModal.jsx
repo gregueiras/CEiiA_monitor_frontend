@@ -106,11 +106,13 @@ class NewSimulationModal extends Component {
   }
 
   showSimulation = async () => {
+    function toRadians(n) {return n * (Math.PI / 180)}
+
     const driftingTimeStep = 0.0625 //1.5 hours
     const engineTurnTimeStep = 1 / (24 * 60 * 12) // 5 seconds
     const engineStraightTimeStep = 1 / (24 * 60) // 1 minute
 
-    const turnDegree = Math.PI / 6 // 30 degrees
+    const turnDegree = 30
 
     const {
       legs,
@@ -143,11 +145,18 @@ class NewSimulationModal extends Component {
         jump = driftingTimeStep
       }
 
-      timeJumps.push(jump)
-      timeSteps.push(Math.round(timeDays / jump))
+      let repeat = Math.ceil(Math.abs(turn / turnDegree))
+      if (repeat === 0) repeat += 1
 
-      turns.push(turn)
-      velocities.push(velocity)
+      for (let iter = 0; iter < repeat; iter++) {
+        timeJumps.push(jump)
+        timeSteps.push(Math.round(timeDays / jump)/repeat)
+
+        turns.push(toRadians(turn))
+        velocities.push(velocity)
+        
+      }
+      
     })
 
     const url = new URL(`${process.env.REACT_APP_BACKEND_API}/simulation?`)
@@ -160,8 +169,8 @@ class NewSimulationModal extends Component {
       radius,
       randomLowerBound: lowerBound,
       randomUpperBound: upperBound,
-      latitude,
-      longitude,
+      latitude: Math.abs(latitude),
+      longitude: Math.abs(longitude),
       reCalc: true,
     }
 
