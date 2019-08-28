@@ -3,10 +3,7 @@ import md5 from "md5"
 
 class Socket {
   constructor() {
-    const port = process.env.BACKEND_API
-      ? process.env.BACKEND_API.split(":")[2]
-      : 4201
-    this.socket = openSocket(`http://localhost:${port}`, {
+    this.socket = openSocket(`${process.env.REACT_APP_BACKEND_API}/`, {
       "force new connection": true,
     })
   }
