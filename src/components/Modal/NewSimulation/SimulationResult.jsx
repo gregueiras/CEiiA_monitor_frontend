@@ -28,6 +28,10 @@ export default class SimulationResult extends Component {
     this.setState({ intervalID: intervalId })
   }
 
+  componentWillUnmount() {
+    clearInterval(this.state.intervalID)
+  }
+
   onLoaderFinished = () => {
     this.setState({ loadingBarProgress: 0 })
   }
