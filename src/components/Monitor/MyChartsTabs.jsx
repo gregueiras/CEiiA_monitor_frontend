@@ -33,7 +33,7 @@ class MyChartsTabs extends Component {
           </TabList>
 
           {charts &&
-            charts.map(({ data, yTitle, title, type }, index) => {
+            charts.map(({ data, yTitle, title, type, charts }, index) => {
               if (data) {
                 return (
                   <TabPanel key={index}>
@@ -49,6 +49,24 @@ class MyChartsTabs extends Component {
                     />
                   </TabPanel>
                 )
+              } else if (charts) {
+                return (
+                  <TabPanel key={index} style={styles.chartGrid}>
+                    {charts.map(({ type, yTitle, title, data }, idx) => (
+                      <MyChart
+                        key={idx}
+                        style={style}
+                        title={title}
+                        yTitle={yTitle}
+                        data={data}
+                        location={location}
+                        type={type}
+                        liveUpdate={liveUpdate}
+                        updateLastUpdate={updateLastUpdate}
+                      />
+                    ))}
+                  </TabPanel>
+                )
               } else {
                 return <TabPanel key={index}></TabPanel>
               }
@@ -56,6 +74,14 @@ class MyChartsTabs extends Component {
         </Tabs>{" "}
       </div>
     )
+  }
+}
+
+const styles = {
+  chartGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+    gridGap: "0.5em",
   }
 }
 

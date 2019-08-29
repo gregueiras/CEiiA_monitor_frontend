@@ -48,19 +48,23 @@ class App extends Component {
   }
 
   async updateData(location, type) {
-    const typeURL = `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${md5(
+    try {
+
+      const typeURL = `${process.env.REACT_APP_BACKEND_API}/?wantedModule=${md5(
       location
     )}&wantedType=${type}`
     const temp = await fetch(typeURL)
     const updatedData = await temp.json()
-
+    
     this.setState({ data: updatedData })
+    } catch {
+      this.setState({liveUpdate: false})
+  }
   }
 
   componentDidMount() {
     this._isMounted = true
     if (this.props.liveUpdate) {
-      console.log(this.props.data)
       this.handleStartLiveUpdate()
     }
   }
@@ -201,10 +205,9 @@ class App extends Component {
 
           <YAxis>
             <YAxis.Title>{yTitle}</YAxis.Title>
-            {data.map(({ name, data: dataBuoy }, index) => {
-              console.log(dataBuoy.length, name)
-              return <LineSeries data={dataBuoy} key={index} name={name} />
-            })}
+            {data.map(({ name, data: dataBuoy }, index) => (
+              <LineSeries data={dataBuoy} key={index} name={name} />
+            ))}
           </YAxis>
         </HighchartsChart>
       </div>
