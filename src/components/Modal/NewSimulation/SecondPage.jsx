@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { GoX, GoPlus } from "react-icons/go"
+import { GoX, GoPlus, GoZap, GoAlert } from "react-icons/go"
 import ordinal from "ordinal"
 import Constants from "style/Constants"
 import MySlider from "components/Slider/MySlider"
@@ -7,6 +7,11 @@ import HoverButton from "components/Buttons/HoverButton"
 
 export default class SecondPage extends Component {
   render() {
+    let battery = 1
+    const chargeTime = 5.5
+    const dischargeTime = 40
+    const maxVelocity = 2
+
     const {
       legs,
       handleEngineChange,
@@ -27,6 +32,12 @@ export default class SecondPage extends Component {
           }}
         >
           {legs.map(({ engine, time, turn, velocity }, idx) => {
+            battery = engine
+              ? battery - (time / dischargeTime) * (velocity / maxVelocity)
+              : battery + time / chargeTime
+            if (battery < 0) battery = 0
+            if (battery > 1) battery = 1
+
             return (
               <div style={styles.inputGroup} key={idx}>
                 <div style={styles.header}>
@@ -104,6 +115,23 @@ export default class SecondPage extends Component {
                       />
                     </div>
                   </div>
+                  <div style={{ ...styles.inputLine, marginTop: "10em" }}>
+                    <div style={{ marginLeft: "auto", marginRight: "auto" }}>
+                      {battery > 0.5 ? (
+                        <GoZap size={28} style={{ color: "green" }} />
+                      ) : (
+                        <GoAlert
+                          size={28}
+                          style={
+                            battery > 0.25
+                              ? { color: "#ffca00" }
+                              : { color: "red" }
+                          }
+                        />
+                      )}{" "}
+                      <span style={{  verticalAlign: "super"}}>Battery Level: {(battery * 100).toFixed(0)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )
@@ -144,11 +172,11 @@ const styles = {
     borderRadius: 4,
     marginLeft: 5,
     marginRight: 5,
-    height: "50vh",
+    height: "58vh",
     background: "#F5F5F0",
   },
   inputNumber: {
-    width: "30%",
+    width: "35%",
   },
   grid: {
     display: "grid",
